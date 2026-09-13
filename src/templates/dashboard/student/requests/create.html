@@ -1,0 +1,1128 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create request' %}{% endblock title %}
+{% block extra_styles %}
+    <link href="{% static 'assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'assets/css/custom_collapse_style.css' %}">
+{% endblock extra_styles %}
+
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        <a href="{% url 'student_list_requests' %}" class="text-hover-primary">{% trans "My Requests" %}</a>
+    </li>
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans 'Create request' %}</li>
+{% endblock %}
+
+
+{% block main_content %}
+    <div class="card card-flush py-4">
+        <div class="card-header">
+            <div class="card-title">
+                <h2>{% trans 'Create request' %}</h2>
+            </div>
+        </div>
+
+        <div class="card-body pt-0">
+            <form method="POST" enctype="multipart/form-data" id="requestForm">
+                {% csrf_token %}
+
+                <div class="mb-10 fv-row">
+                    <label class="required form-label mb-4">{% trans 'Select Specialist Type' %}</label>
+                    <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold mb-6">
+                        <li class="nav-item">
+                            <a class="nav-link text-gray-600 text-hover-primary text-active-primary py-4 me-6 specialty-tab {% if form.specialty_needed.value == 'TENNIS' or not form.specialty_needed.value %}active{% endif %}"
+                               data-value="TENNIS" href="#">
+                                <i class="ki-outline ki-user fs-4 me-2"></i> Tennis Coach
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-gray-600 text-hover-primary text-active-primary py-4 me-6 specialty-tab {% if form.specialty_needed.value == 'NUTRITION' %}active{% endif %}"
+                               data-value="NUTRITION" href="#">
+                                <i class="ki-outline ki-heart fs-4 me-2"></i> Nutritionist
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-gray-600 text-hover-primary text-active-primary py-4 specialty-tab {% if form.specialty_needed.value == 'PSYCHOLOGY' %}active{% endif %}"
+                               data-value="PSYCHOLOGY" href="#">
+                                <i class="ki-outline ki-messages fs-4 me-2"></i> Psychologist
+                            </a>
+                        </li>
+                    </ul>
+
+                    <select name="specialty_needed" id="specialty_needed" class="d-none" required>
+                        <option value="TENNIS"
+                                {% if selected_specialty == 'TENNIS' or not selected_specialty %}selected{% endif %}>
+                            TENNIS
+                        </option>
+                        <option value="NUTRITION" {% if selected_specialty == 'NUTRITION' %}selected{% endif %}>
+                            NUTRITION
+                        </option>
+                        <option value="PSYCHOLOGY" {% if selected_specialty == 'PSYCHOLOGY' %}selected{% endif %}>
+                            PSYCHOLOGY
+                        </option>
+                    </select>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 🎾 СЕКЦІЯ 1: ФОРМА ДЛЯ TENNIS COACH        -->
+                <!-- ========================================== -->
+                <div id="section-TENNIS" class="specialty-section">
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
+                            <i class="ki-outline ki-shield-slash fs-2hx text-danger me-4"></i>
+                            <div class="d-flex flex-column">
+                                <h4 class="mb-1 text-danger">{% trans "Validation Error" %}</h4>
+                                <span>{{ form.non_field_errors.0 }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-10 fv-row">
+                        <label for="service_tennis"
+                               class="required form-label">{% trans 'Select service type' %}</label>
+
+                        <!-- Селект залишаємо БЕЗ disabled за замовчуванням, оскільки Теніс - це перша (активна) вкладка -->
+                        <select name="service" class="form-select mb-2 specialty-service-select" id="service_tennis"
+                                required>
+                            <option value="" disabled {% if not form.service.value %}selected{% endif %}>
+                                -- {% trans 'Choose Tennis Service' %} --
+                            </option>
+
+                            {% for service in tennis_services %}
+                                <option value="{{ service.id }}"
+                                        {% if form.service.value|stringformat:"s" == service.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ service.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <!-- 🌟 Вирівняно класи помилок до єдиного стандарту Metronic -->
+                        {% if form.service.errors %}
+                            <div class="invalid-feedback d-block">{{ form.service.errors.0 }}</div>
+                        {% endif %}
+
+                        <div class="text-muted fs-7">{% trans 'Choose the type of analysis you need.' %}</div>
+                    </div>
+
+                    <div class="mb-10 fv-row">
+                        <label for="{{ form.comment.id_for_label }}" class="form-label">
+                            {{ form.comment.label }}
+                        </label>
+
+                        {{ form.comment }}
+
+                        {% if form.comment.errors %}
+                            <div class="text-danger fs-7 mt-1">{{ form.comment.errors.0 }}</div>
+                        {% endif %}
+                        <div class="text-muted fs-7">{% trans 'Provide specific details or questions for the coach.' %}</div>
+                    </div>
+
+                    <div class="upload-component" data-mode="instant" data-type="coach_request">
+
+                        <div class="mb-10 fv-row">
+                            <label for="mediaTypeSelect"
+                                   class="required form-label">{% trans 'Select media type' %}</label>
+                            <select name="media_type" id="mediaTypeSelect" class="form-select mb-2">
+                                <option value="video"
+                                        {% if request.POST.media_type == 'video' or media_type_value == 'video' %}selected="selected"{% endif %}>{% trans 'Video' %}</option>
+                                <option value="file"
+                                        {% if request.POST.media_type == 'file' or media_type_value == 'file' %}selected="selected"{% endif %}>{% trans 'Document / File' %}</option>
+                                <option value="link"
+                                        {% if request.POST.media_type == 'link' or media_type_value == 'link' %}selected="selected"{% endif %}>{% trans 'Link' %}</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-10 fv-row" id="fileInputWrapper">
+                            <label for="{{ form.media_file.id_for_label }}" class="required form-label"
+                                   id="fileInputLabel">
+                                {{ form.media_file.label|default:_('Upload File') }}
+                            </label>
+
+                            {{ form.media_file }}
+
+                            {% if form.media_file.errors %}
+                                <div class="text-danger fs-7 mt-1">{{ form.media_file.errors.0 }}</div>
+                            {% endif %}
+
+                            <input type="hidden" name="uploaded_file_key" class="tennis-uploaded-file-key"/>
+                            <input type="hidden" name="uploaded_file_size" class="tennis-uploaded-file-size"/>
+
+                            <div class="progress-container mt-3 d-none">
+                                <div class="progress" style="height: 22px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success text-white fw-bold d-flex align-items-center justify-content-center"
+                                         role="progressbar" style="width: 0; min-width: 2rem;">
+                                        0%
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="upload-status-text form-text text-muted mt-2 d-none"></div>
+                            <div class="text-muted fs-7 file-size-help mt-2 d-flex align-items-center flex-wrap gap-2"
+                                 id="fileSizeHelpText">
+                                <span id="fileSizeLimitText">
+                                    <i class="ki-outline ki-information-2 fs-6 me-1"></i>{% trans 'Max file size is 100MB.' %}
+                                </span>
+                                <span class="bullet bullet-dot bg-gray-400"></span>
+                                <span>
+                                    {% trans 'Allowed formats:' %}
+                                    <span class="fw-semibold text-gray-700" id="fileFormatsText">MP4, MOV, AVI, MKV, WEBM</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-10 fv-row" id="linkInputWrapper" style="display: none;">
+                            <label for="{{ form.media_link.id_for_label }}" class="required form-label">
+                                {{ form.media_link.label|default:_('Link URL') }}
+                            </label>
+
+                            {{ form.media_link }}
+
+                            {% if form.media_link.errors %}
+                                <div class="text-danger fs-7 mt-1">{{ form.media_link.errors.0 }}</div>
+                            {% endif %}
+                            <div class="text-muted fs-7">{% trans 'Enter a valid YouTube Link!' %}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 🥗 СЕКЦІЯ 2: ФОРМА ДЛЯ NUTRITIONIST        -->
+                <!-- ========================================== -->
+                <div id="section-NUTRITION" class="specialty-section d-none">
+                    <div class="mb-10 fv-row">
+                        <label for="service_nutrition"
+                               class="required form-label">{% trans 'Select service type' %}</label>
+
+                        <select name="service" class="form-select mb-2 specialty-service-select" id="service_nutrition"
+                                required disabled>
+                            <option value="" disabled {% if not form.service.value %}selected{% endif %}>
+                                -- {% trans 'Choose Nutrition Service' %} --
+                            </option>
+                            {% for service in nutrition_services %}
+                                <option value="{{ service.id }}"
+                                        {% if form.service.value|stringformat:"s" == service.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ service.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        {% if nutrition_form.service.errors %}
+                            <div class="invalid-feedback d-block">{{ nutrition_form.service.errors.0 }}</div>
+                        {% endif %}
+                        <div class="text-muted fs-7">{% trans 'Choose the level of coaching and support you need.' %}</div>
+                    </div>
+
+                    <h4 class="text-dark fw-bold mb-6">{% trans "Personal & Anthropometric Data" %}</h4>
+
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-8 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.full_name.label }}</label>
+                            {{ nutrition_form.full_name }}
+                            {% if nutrition_form.full_name.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.full_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.age.label }}</label>
+                            {{ nutrition_form.age }}
+                            {% if nutrition_form.age.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.age.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.weight.label }}</label>
+                            <div class="input-group">
+                                {{ nutrition_form.weight }}
+                                {{ nutrition_form.weight_unit }}
+                            </div>
+                            {% if nutrition_form.weight.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.weight.errors.0 }}</div>
+                            {% endif %}
+                            {% if nutrition_form.weight_unit.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.weight_unit.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.height.label }}</label>
+                            <div class="input-group">
+                                {{ nutrition_form.height }}
+                                {{ nutrition_form.height_unit }}
+                            </div>
+                            {% if nutrition_form.height.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.height.errors.0 }}</div>
+                            {% endif %}
+                            {% if nutrition_form.height_unit.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.height_unit.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-4 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.handedness.label }}</label>
+                            {{ nutrition_form.handedness }}
+                            {% if nutrition_form.handedness.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.handedness.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.language.label }}</label>
+                            {{ nutrition_form.language }}
+                            {% if nutrition_form.language.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.language.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.whatsapp_number.label }}</label>
+                            {{ nutrition_form.whatsapp_number }}
+                            {% if nutrition_form.whatsapp_number.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.whatsapp_number.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-5"></div>
+
+                    <h4 class="text-dark fw-bold mb-4 mt-8">{% trans "Consultation Scheduling" %}</h4>
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+                            <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.appointment_date.label }}</label>
+                            {{ nutrition_form.appointment_date }}
+                            {% if nutrition_form.appointment_date.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.appointment_date.errors.0 }}</div>
+                            {% endif %}
+                            <div class="text-muted fs-7 mt-1">{% trans 'Select a convenient date and time for our call.' %}</div>
+                        </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-10"></div>
+
+                    <h4 class="text-dark fw-bold mb-6">{% trans "Medical History & Current State" %}</h4>
+
+                    <div class="fv-row mb-8">
+                        <label class="required form-label fw-semibold fs-6 mb-2">{{ nutrition_form.complaints.label }}</label>
+                        {{ nutrition_form.complaints }}
+                        {% if nutrition_form.complaints.errors %}
+                            <div class="invalid-feedback d-block">{{ nutrition_form.complaints.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="fv-row mb-8">
+                        <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.chronic_diseases.label }}</label>
+                        {{ nutrition_form.chronic_diseases }}
+                        {% if nutrition_form.chronic_diseases.errors %}
+                            <div class="invalid-feedback d-block">{{ nutrition_form.chronic_diseases.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="fv-row mb-8">
+                        <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.medications_and_vitamins.label }}</label>
+                        {{ nutrition_form.medications_and_vitamins }}
+                        {% if nutrition_form.medications_and_vitamins.errors %}
+                            <div class="invalid-feedback d-block">{{ nutrition_form.medications_and_vitamins.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-4 fv-row">
+                            <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.operations.label }}</label>
+                            {{ nutrition_form.operations }}
+                            {% if nutrition_form.operations.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.operations.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 fv-row">
+                            <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.traumas.label }}</label>
+                            {{ nutrition_form.traumas }}
+                            {% if nutrition_form.traumas.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.traumas.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 fv-row">
+                            <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.allergies.label }}</label>
+                            {{ nutrition_form.allergies }}
+                            {% if nutrition_form.allergies.errors %}
+                                <div class="invalid-feedback d-block">{{ nutrition_form.allergies.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-10"></div>
+
+                    <h4 class="text-dark fw-bold mb-6">{% trans "Diagnostic Papers & Medical Analyses" %}</h4>
+                    <div class="fv-row mb-10 upload-component" data-mode="instant" data-type="nutrition_intake">
+                        <label class="form-label fw-semibold fs-6 mb-2">{{ nutrition_form.attachments.label }}</label>
+
+                        {{ nutrition_form.attachments }}
+
+                        {% if nutrition_form.attachments.errors %}
+                            <div class="invalid-feedback d-block">{{ nutrition_form.attachments.errors.0 }}</div>
+                        {% endif %}
+
+                        <input type="hidden" name="r2_file_key" class="nutr-uploaded-file-key"/>
+                        <input type="hidden" name="r2_file_size" class="nutr-uploaded-file-size"/>
+
+                        <div class="progress-container mt-3 d-none">
+                            <div class="progress" style="height: 22px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success text-white fw-bold d-flex align-items-center justify-content-center"
+                                     role="progressbar" style="width: 0; min-width: 2rem;">0%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="upload-status-text form-text text-muted mt-2 d-none"></div>
+                        <div class="text-muted fs-7 file-size-help mt-2 d-flex align-items-center flex-wrap gap-2">
+                            <span>
+                                <i class="ki-outline ki-information-2 fs-6 me-1"></i>{% trans 'Max file size is 10MB.' %}
+                            </span>
+                            <span class="bullet bullet-dot bg-gray-400"></span>
+                            <span>
+                                {% trans 'Allowed formats:' %}
+                                <span class="fw-semibold text-gray-700">PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 🧠 СЕКЦІЯ 3: ФОРМА ДЛЯ PSYCHOLOGIST        -->
+                <!-- ========================================== -->
+                <div id="section-PSYCHOLOGY" class="specialty-section d-none">
+
+                    <!-- ⚙️ БАЗОВА СЕКЦІЯ (СЕРВІС ПСИХОЛОГА) -->
+                    <div class="mb-10 fv-row">
+                        {% if psychology_form.non_field_errors %}
+                            <div class="alert alert-danger mb-5">{{ psychology_form.non_field_errors.0 }}</div>
+                        {% endif %}
+
+                        <label for="service_psychology"
+                               class="required form-label">{% trans 'Select service type' %}</label>
+
+                        <!-- 🌟 ВИПРАВЛЕНО: унікальний id, додано клас specialty-service-select та disabled за замовчуванням -->
+                        <select name="service" class="form-select mb-2 specialty-service-select" id="service_psychology"
+                                required disabled>
+                            <option value="" disabled {% if not form.service.value %}selected{% endif %}>
+                                -- {% trans 'Choose Psychology Service' %} --
+                            </option>
+
+                            <!-- 🌟 ВИПРАВЛЕНО: ітеруємо ТІЛЬКИ по психологічних послугах -->
+                            {% for service in psychology_services %}
+                                <option value="{{ service.id }}"
+                                        {% if form.service.value|stringformat:"s" == service.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ service.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        {% if form.service.errors %}
+                            <div class="invalid-feedback d-block">{{ form.service.errors.0 }}</div>
+                        {% endif %}
+                        <div class="text-muted fs-7">{% trans 'Choose the level of psychological support you need.' %}</div>
+                    </div>
+
+                    <!-- 🧠 ОСНОВНІ ДАНІ ПСИХОЛОГА -->
+                    <div class="mb-10">
+                        <h3 class="fw-bold text-gray-900 mb-3">{% trans "Psychology Consultation Setup" %}</h3>
+                        <div class="text-muted fs-6 mb-7">{% trans "Please provide your contact details and select a session time." %}</div>
+
+                        <div class="row g-7 mb-7">
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">{{ psychology_form.appointment_date.label }}</label>
+                                {{ psychology_form.appointment_date }}
+                                {% if psychology_form.appointment_date.errors %}
+                                    <div class="text-danger mt-2 fs-7">
+                                        {{ psychology_form.appointment_date.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">{{ psychology_form.whatsapp_number.label }}</label>
+                                {{ psychology_form.whatsapp_number }}
+                                {% if psychology_form.whatsapp_number.errors %}
+                                    <div class="text-danger mt-2 fs-7">
+                                        {{ psychology_form.whatsapp_number.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div id="kt_custom_psychology_wrapper"
+                             class="custom-psychology-wrapper border border-gray-300 rounded mb-7 {% if psychology_form.errors and not psychology_form.appointment_date.errors and not psychology_form.whatsapp_number.errors %}is-open{% endif %}">
+
+                            <!-- Тригер -->
+                            <button type="button"
+                                    id="kt_custom_psychology_trigger"
+                                    class="btn w-100 d-flex align-items-center justify-content-between p-5 text-start bg-transparent border-0">
+                                <span class="fs-4 fw-bold text-gray-900">
+                                    {% trans "Add context for the psychologist (Optional)" %}
+                                </span>
+                                <i class="ki-outline ki-down fs-2 text-gray-700 custom-psychology-icon"></i>
+                            </button>
+
+                            <div id="kt_custom_psychology_content"
+                                 class="custom-psychology-collapse {% if psychology_form.errors and not psychology_form.appointment_date.errors and not psychology_form.whatsapp_number.errors %}is-open{% endif %}">
+                                <div class="custom-psychology-collapse-inner">
+                                    <div class="p-6 border-top border-gray-300">
+
+                                        <div class="fv-row mb-7">
+                                            <label class="fs-6 fw-semibold mb-2">{{ psychology_form.primary_concern.label }}</label>
+                                            {{ psychology_form.primary_concern }}
+                                            {% if psychology_form.primary_concern.errors %}
+                                                <div class="text-danger mt-2 fs-7">{{ psychology_form.primary_concern.errors|striptags }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="fv-row mb-7">
+                                            <label class="fs-6 fw-semibold mb-2">{{ psychology_form.psychiatric_medications.label }}</label>
+                                            {{ psychology_form.psychiatric_medications }}
+                                            {% if psychology_form.psychiatric_medications.errors %}
+                                                <div class="text-danger mt-2 fs-7">{{ psychology_form.psychiatric_medications.errors|striptags }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="row g-7 mb-7">
+                                            <div class="col-md-6">
+                                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                                    {{ psychology_form.previous_therapy }}
+                                                    <span class="form-check-label fs-6 fw-semibold text-gray-700">
+                                        {{ psychology_form.previous_therapy.label }}
+                                    </span>
+                                                </label>
+                                                {% if psychology_form.previous_therapy.errors %}
+                                                    <div class="text-danger mt-2 fs-7">{{ psychology_form.previous_therapy.errors|striptags }}</div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                                    {{ psychology_form.crisis_state }}
+                                                    <span class="form-check-label fs-6 fw-semibold text-gray-700">
+                                        {{ psychology_form.crisis_state.label }}
+                                    </span>
+                                                </label>
+                                                {% if psychology_form.crisis_state.errors %}
+                                                    <div class="text-danger mt-2 fs-7">{{ psychology_form.crisis_state.errors|striptags }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="text-end mt-10">
+                    <button type="reset" class="btn btn-light me-5">
+                        <span class="indicator-label">{% trans 'Cancel' %}</span>
+                    </button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                        <span class="indicator-label">{% trans 'Submit Request' %}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock main_content %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/custom/custom_collapse.js' %}"></script>
+    <script src="{% static 'assets/plugins/global/plugins.bundle.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("#requestForm");
+            if (!form) return;
+
+            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+
+            // ВСІ КНОПКИ RESET НА ФОРМІ
+            const resetBtns = form.querySelectorAll('button[type="reset"]');
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // =========================================================================
+            // ГЛОБАЛЬНИЙ ТРЕКЕР АКТИВНИХ ЗАВАНТАЖЕНЬ (Синхронізовано для всіх кнопок)
+            // =========================================================================
+            let activeUploadsCount = 0;
+
+            function updateSubmitButtonState(isUploading) {
+                if (isUploading) {
+                    activeUploadsCount++;
+                } else {
+                    activeUploadsCount = Math.max(0, activeUploadsCount - 1);
+                }
+
+                const isCurrentlyUploading = activeUploadsCount > 0;
+
+                // Керування кнопкою Submit
+                if (submitBtn) {
+                    if (isCurrentlyUploading) {
+                        submitBtn.disabled = true;
+                        submitBtn.setAttribute('data-uploading', 'true');
+                    } else {
+                        submitBtn.disabled = false;
+                        submitBtn.removeAttribute('data-uploading');
+                    }
+                }
+
+                // 🌟 КЕРУВАННЯ ВСІМА КНОПКАМИ RESET (Блокуємо під час завантаження)
+                resetBtns.forEach(btn => {
+                    btn.disabled = isCurrentlyUploading;
+                });
+            }
+
+            // =========================================================================
+            // 1. БЕЗПЕЧНИЙ HELPER ДЛЯ КРАСИВИХ POPUPS METRONIC
+            // =========================================================================
+            function showNotify(message, type = 'error') {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        text: message,
+                        icon: type,
+                        buttonsStyling: false,
+                        confirmButtonText: "{% trans 'Ok, got it!' %}",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                } else {
+                    alert(message);
+                }
+            }
+
+            // =========================================================================
+            // 2. КОНФІГУРАЦІЯ ОБМЕЖЕНЬ ФАЙЛІВ
+            // =========================================================================
+            const ALLOWED_EXTENSIONS = {
+                video: ['.mp4', '.mov', '.avi', '.mkv', '.webm'],
+                file: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt'],
+                image: ['.jpg', '.jpeg', '.png']
+            };
+
+            const SIZE_LIMITS = {
+                video: 100 * 1024 * 1024,           // 100MB
+                file: 10 * 1024 * 1024,             // 10MB
+                nutrition_intake: 10 * 1024 * 1024  // 10MB
+            };
+
+            // =========================================================================
+            // 3. УНІВЕРСАЛЬНИЙ КЛАС ДЛЯ ЗАВАНТАЖЕННЯ (R2Uploader)
+            // =========================================================================
+            class R2Uploader {
+                constructor(container) {
+                    this.container = container;
+                    this.mode = container.dataset.mode;
+                    this.type = container.dataset.type;
+
+                    this.isInstant = this.mode === 'instant' || this.mode === 'direct';
+
+                    this.input = container.querySelector('input[type="file"]');
+                    this.progressBar = container.querySelector('.progress-bar');
+                    this.statusText = container.querySelector('.upload-status-text');
+                    this.progressContainer = container.querySelector('.progress-container');
+                    if (this.type === 'coach_request') {
+                        this.hiddenKeyInput = container.querySelector('.tennis-uploaded-file-key');
+                        this.hiddenSizeInput = container.querySelector('.tennis-uploaded-file-size');
+                    } else {
+                        this.hiddenKeyInput = container.querySelector('.nutr-uploaded-file-key');
+                        this.hiddenSizeInput = container.querySelector('.nutr-uploaded-file-size');
+                    }
+                    this.isUploaded = false;
+                    this.isCurrentlyUploading = false;
+
+                    if (this.input) this.input.classList.add('upload-input');
+
+                    this.init();
+                }
+
+                init() {
+                    if (this.input) {
+                        this.input.addEventListener('change', () => this.handleFileSelect());
+                    }
+                    if (this.mode === 'submit') {
+                        form.addEventListener('submit', (e) => this.handleSubmit(e));
+                    }
+                }
+
+                getConstraints() {
+                    if (this.type === 'coach_request') {
+                        const mediaTypeSelect = document.getElementById('mediaTypeSelect');
+                        const selectedType = mediaTypeSelect ? mediaTypeSelect.value : 'video';
+
+                        if (selectedType === 'video') {
+                            return {
+                                exts: ALLOWED_EXTENSIONS.video,
+                                maxSize: SIZE_LIMITS.video
+                            };
+                        }
+
+                        // Для файлів та документів коуча
+                        return {
+                            exts: ALLOWED_EXTENSIONS.file,
+                            maxSize: SIZE_LIMITS.file
+                        };
+                    }
+
+                    // Для nutrition_intake та інших форм:
+                    // Використовуємо Set, щоб уникнути дублікатів розширень (.jpg, .png тощо)
+                    const allUniqueExts = Array.from(new Set([
+                        ...(ALLOWED_EXTENSIONS.file || []),
+                        ...(ALLOWED_EXTENSIONS.image || [])
+                    ]));
+
+                    return {
+                        exts: allUniqueExts,
+                        maxSize: SIZE_LIMITS.nutrition_intake
+                    };
+                }
+
+                validateFile(file) {
+                    const constraints = this.getConstraints();
+                    const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+                    if (!constraints.exts.includes(ext)) {
+                        showNotify(`{% trans "Unsupported file format!" %}\n{% trans "Allowed formats:" %} ${constraints.exts.join(', ')}`, 'warning');
+                        this.reset();
+                        return false;
+                    }
+
+                    if (file.size > constraints.maxSize) {
+                        const limitMb = constraints.maxSize / (1024 * 1024);
+                        showNotify(`{% trans "File is too large!" %}\n{% trans "Maximum allowed size is" %} ${limitMb}MB.`, 'warning');
+                        this.reset();
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                async handleFileSelect() {
+                    const file = this.input.files[0];
+                    if (!file) return;
+
+                    if (!this.validateFile(file)) return;
+
+                    if (this.isInstant) {
+                        this.prepareUI();
+                        try {
+                            const data = await this.getPresignedUrl(file);
+                            await this.uploadToR2(file, data);
+                        } catch (err) {
+                            showNotify("Upload failed: " + err.message, 'error');
+                            this.reset();
+                        }
+                    }
+                }
+
+                async handleSubmit(e) {
+                    // Якщо файл взагалі не обраний або інпут вимкнений — дозволяємо сабміт (наприклад, для лінків)
+                    if (!this.input || this.input.disabled || this.input.files.length === 0) {
+                        return;
+                    }
+
+                    // Якщо файл уже завантажений — все ок, пускаємо форму далі
+                    if (this.isUploaded) {
+                        return;
+                    }
+
+                    // Зупиняємо стандартний сабміт форми
+                    e.preventDefault();
+
+                    const file = this.input.files[0];
+                    if (!this.validateFile(file)) {
+                        return;
+                    }
+
+                    this.prepareUI();
+
+                    try {
+                        // Чекаємо завершення завантаження в R2 ПЕРЕД тим, як відправити форму
+                        const data = await this.getPresignedUrl(file);
+                        await this.uploadToR2(file, data);
+
+                        this.isUploaded = true;
+                        this.input.removeAttribute("name"); // Прибираємо name у файлу, щоб не лити його на наш бекенд
+
+                        // Тепер, коли ключ точно записано в hiddenKeyInput, відправляємо форму програмно
+                        form.submit();
+                    } catch (err) {
+                        showNotify("Upload failed: " + err.message, 'error');
+                        this.reset();
+                    }
+                }
+
+                prepareUI() {
+                    if (this.progressContainer) this.progressContainer.classList.remove('d-none');
+                    if (this.statusText) {
+                        this.statusText.classList.remove('d-none');
+                        this.statusText.textContent = "0 KB / 0 KB";
+                    }
+
+                    if (!this.isCurrentlyUploading) {
+                        this.isCurrentlyUploading = true;
+                        updateSubmitButtonState(true);
+                    }
+                }
+
+                reset() {
+                    if (this.input) this.input.value = '';
+                    if (this.progressContainer) this.progressContainer.classList.add('d-none');
+                    if (this.statusText) this.statusText.classList.add('d-none');
+
+                    // 🌟 ДОДАНО: Очищаємо ключ і розмір при скиданні
+                    if (this.hiddenKeyInput) this.hiddenKeyInput.value = '';
+                    if (this.hiddenSizeInput) this.hiddenSizeInput.value = '';
+
+                    if (this.isCurrentlyUploading) {
+                        this.isCurrentlyUploading = false;
+                        updateSubmitButtonState(false);
+                    }
+                    this.isUploaded = false;
+                }
+
+                async getPresignedUrl(file) {
+                    const formData = new FormData();
+                    formData.append("filename", file.name);
+                    formData.append("content_type", file.type || "application/octet-stream");
+                    formData.append("file_size", file.size);
+                    formData.append("upload_type", this.type);
+
+                    const resp = await fetch("{% url 'generate_r2_upload_url' %}", {
+                        method: "POST",
+                        headers: {"X-CSRFToken": csrfToken},
+                        body: formData
+                    });
+
+                    if (!resp.ok) {
+                        const errData = await resp.json();
+                        throw new Error(errData.error || "Failed to initialize upload session.");
+                    }
+                    return await resp.json();
+                }
+
+                uploadToR2(file, data) {
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("PUT", data.upload_url, true);
+                        xhr.setRequestHeader("Content-Type", file.type);
+
+                        xhr.upload.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                const p = Math.round((e.loaded / e.total) * 100);
+
+                                if (this.progressBar) {
+                                    this.progressBar.style.width = p + "%";
+                                    this.progressBar.textContent = p + "%";
+                                }
+
+                                if (this.statusText) {
+                                    if (e.total < 1024 * 1024) {
+                                        const loadedKb = (e.loaded / 1024).toFixed(1);
+                                        const totalKb = (e.total / 1024).toFixed(1);
+                                        this.statusText.textContent = `{% trans 'Uploaded' %} ${loadedKb} KB / ${totalKb} KB`;
+                                    } else {
+                                        const loadedMb = (e.loaded / (1024 * 1024)).toFixed(1);
+                                        const totalMb = (e.total / (1024 * 1024)).toFixed(1);
+                                        this.statusText.textContent = `{% trans 'Uploaded' %} ${loadedMb} MB / ${totalMb} MB`;
+                                    }
+                                }
+                            }
+                        };
+
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                if (this.hiddenKeyInput) {
+                                    this.hiddenKeyInput.value = data.file_key;
+                                }
+
+                                // 🌟 ДОДАНО: Записуємо розмір файлу в байтах
+                                if (this.hiddenSizeInput) {
+                                    this.hiddenSizeInput.value = file.size;
+                                }
+
+                                if (this.statusText) {
+                                    this.statusText.textContent = "{% trans 'Upload successful!' %}";
+                                }
+
+                                if (this.isCurrentlyUploading) {
+                                    this.isCurrentlyUploading = false;
+                                    updateSubmitButtonState(false);
+                                }
+                                resolve();
+                            } else {
+                                reject(new Error(`Cloudflare R2 returned status code: ${xhr.status}`));
+                            }
+                        };
+
+                        xhr.onerror = () => reject(new Error("Network connection error during cloud transfer."));
+                        xhr.send(file);
+                    });
+                }
+            }
+
+            // =========================================================================
+            // 4. ЗАХИСТ ВІД ОБХОДУ ЧЕРЕЗ ENTER KEY
+            // =========================================================================
+            form.addEventListener('submit', function (e) {
+                if (submitBtn && submitBtn.getAttribute('data-uploading') === 'true') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showNotify("{% trans 'Please wait, file upload in progress.' %}", 'info');
+                }
+            });
+
+            // =========================================================================
+            // 5. ПЕРЕМИКАЧ ТИПІВ МЕДІА (Коуч)
+            // =========================================================================
+            function toggleMediaInput() {
+                const select = document.getElementById('mediaTypeSelect');
+                if (!select) return;
+
+                const type = select.value;
+                const fileWrapper = document.getElementById('fileInputWrapper');
+                const linkWrapper = document.getElementById('linkInputWrapper');
+                const fileLabel = document.getElementById('fileInputLabel');
+
+                // Пошук інпутів із фолбеком за атрибутом name
+                const fileField = document.getElementById('mediaFile') || document.querySelector('input[name="media_file"]');
+                const linkField = document.querySelector('input[name="media_link"]');
+
+                // Елементи оновленого адаптивного підкажчика Metronic
+                const fileSizeLimitText = document.getElementById('fileSizeLimitText');
+                const fileFormatsText = document.getElementById('fileFormatsText');
+
+                // Скидаємо стан кастомного уплоадера при зміні типу
+                const coachUploaderEl = select.closest('.upload-component');
+                if (coachUploaderEl && coachUploaderEl.__uploaderInstance) {
+                    coachUploaderEl.__uploaderInstance.reset();
+                }
+
+                if (type === 'video') {
+                    if (fileWrapper) fileWrapper.style.display = 'block';
+                    if (linkWrapper) linkWrapper.style.display = 'none';
+                    if (fileLabel) fileLabel.textContent = "{% trans 'Upload Video File' %}";
+
+                    if (fileField) {
+                        fileField.setAttribute('accept', '.mp4, .mov, .avi, .mkv, .webm');
+                        fileField.removeAttribute('disabled');
+                    }
+                    if (linkField) linkField.setAttribute('disabled', 'disabled');
+
+                    // Точкове оновлення тексту без руйнування HTML-верстки
+                    if (fileSizeLimitText) {
+                        fileSizeLimitText.innerHTML = `<i class="ki-outline ki-information-2 fs-6 me-1"></i>{% trans 'Max file size is 100MB.' %}`;
+                    }
+                    if (fileFormatsText) {
+                        fileFormatsText.textContent = 'MP4, MOV, AVI, MKV, WEBM';
+                    }
+
+                } else if (type === 'file') {
+                    if (fileWrapper) fileWrapper.style.display = 'block';
+                    if (linkWrapper) linkWrapper.style.display = 'none';
+                    if (fileLabel) fileLabel.textContent = "{% trans 'Upload Document / File' %}";
+
+                    if (fileField) {
+                        // 🌟 Додано зображення (.jpg, .jpeg, .png)
+                        fileField.setAttribute('accept', '.pdf, .doc, .docx, .xls, .xlsx, .txt, .jpg, .jpeg, .png');
+                        fileField.removeAttribute('disabled');
+                    }
+                    if (linkField) linkField.setAttribute('disabled', 'disabled');
+
+                    // Точкове оновлення тексту без руйнування HTML-верстки
+                    if (fileSizeLimitText) {
+                        fileSizeLimitText.innerHTML = `<i class="ki-outline ki-information-2 fs-6 me-1"></i>{% trans 'Max file size is 10MB.' %}`;
+                    }
+                    if (fileFormatsText) {
+                        fileFormatsText.textContent = 'PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG';
+                    }
+
+                } else if (type === 'link') {
+                    if (fileWrapper) fileWrapper.style.display = 'none';
+                    if (linkWrapper) linkWrapper.style.display = 'block';
+
+                    if (fileField) fileField.setAttribute('disabled', 'disabled');
+                    if (linkField) linkField.removeAttribute('disabled');
+                }
+            }
+
+            // =========================================================================
+            // 6. ПЕРЕМИКАЧ СЕКЦІЙ ТАБІВ (Tennis, Nutrition тощо)
+            // =========================================================================
+            const specialtyInput = document.getElementById('specialty_needed');
+
+            function switchSpecialtyForm(specialtyCode) {
+                document.querySelectorAll('.specialty-section').forEach(section => {
+                    const isActive = (section.id === `section-${specialtyCode}`);
+                    section.classList.toggle('d-none', !isActive);
+
+                    section.querySelectorAll('input, select, textarea').forEach(input => {
+                        // 🌟 НЕ чіпаємо файл-інпути та приховані поля ключів/розмірів при перемиканні табів,
+                        // щоб вони завжди були готові до сабміту чи завантаження
+                        if (input.type === 'file' || input.type === 'hidden') {
+                            return;
+                        }
+
+                        if (isActive) {
+                            input.removeAttribute('disabled');
+                            if (input.hasAttribute('data-originally-required')) {
+                                input.setAttribute('required', 'required');
+                            }
+                        } else {
+                            if (input.hasAttribute('required')) {
+                                input.setAttribute('data-originally-required', 'true');
+                                input.removeAttribute('required');
+                            }
+                            input.setAttribute('disabled', 'disabled');
+                        }
+                    });
+                });
+            }
+
+            document.querySelectorAll('.specialty-tab').forEach(tab => {
+                tab.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.specialty-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const targetValue = this.getAttribute('data-value');
+                    if (specialtyInput) specialtyInput.value = targetValue;
+                    switchSpecialtyForm(targetValue);
+                });
+            });
+
+            // =========================================================================
+            // 7. СТАРТОВА ІНІЦІАЛІЗАЦІЯ
+            // =========================================================================
+            resetBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        text: "Are you sure you want to clear all fields? Your uploaded files will be discarded.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonText: "Yes, clear it!",
+                        cancelButtonText: "No, keep data",
+                        customClass: {
+                            confirmButton: "btn btn-danger",
+                            cancelButton: "btn btn-light"
+                        }
+                    }).then(function (result) {
+                        if (result.value) {
+                            // Тільки після підтвердження очищаємо форму
+                            form.reset();
+                            // Тут також викликаємо метод .reset() для всіх R2Uploader інстансів!
+                            document.querySelectorAll('.upload-component').forEach(el => {
+                                if (el.__uploaderInstance) el.__uploaderInstance.reset();
+                            });
+                        }
+                    });
+                })
+            })
+            const mediaTypeSelect = document.getElementById('mediaTypeSelect');
+            if (mediaTypeSelect) {
+                mediaTypeSelect.addEventListener('change', toggleMediaInput);
+            }
+
+            document.querySelectorAll('.upload-component').forEach(el => {
+                const uploader = new R2Uploader(el);
+                el.__uploaderInstance = uploader;
+            });
+
+            if (specialtyInput) {
+                switchSpecialtyForm(specialtyInput.value || 'TENNIS');
+            }
+            toggleMediaInput();
+        });
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // 🌟 1. Базовий конфіг для ДАТ ТА ЧАСУ (appointment, start, end)
+            const dateTimeConfig = {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                animate: true,
+                position: "bottom left",
+                minDate: "today", // Блокує вибір минулих дат
+            };
+
+            // 🚀 Ініціалізація ВСІХ полів appointment_date (і для нутриціолога, і для психолога)
+            // Селектор $= означає "закінчується на" (ігноруючи префікс nutr- чи psych-)
+            document.querySelectorAll('input[name$="appointment_date"]').forEach(function (input) {
+                flatpickr(input, {
+                    ...dateTimeConfig
+                });
+            });
+
+            // 🚀 Ініціалізація start_date та end_date (якщо вони використовуються в інших модулях)
+            const startInputs = document.querySelectorAll('input[name$="start_date"]');
+            const endInputs = document.querySelectorAll('input[name$="end_date"]');
+
+            startInputs.forEach(function (startInput, index) {
+                const endInput = endInputs[index];
+                if (startInput && endInput) {
+                    const endPicker = flatpickr(endInput, {...dateTimeConfig});
+                    flatpickr(startInput, {
+                        ...dateTimeConfig,
+                        onChange: function (selectedDates, dateStr) {
+                            endPicker.set("minDate", dateStr); // Заборона вибору кінця раніше початку
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const weightInput = document.querySelector('input[name="nutr-weight"]');
+            const weightUnitSelect = document.querySelector('select[name="nutr-weight_unit"]');
+
+            const heightInput = document.querySelector('input[name="nutr-height"]');
+            const heightUnitSelect = document.querySelector('select[name="nutr-height_unit"]');
+
+            if (weightInput && weightUnitSelect) {
+                let previousUnit = weightUnitSelect.value;
+                weightUnitSelect.addEventListener('change', function () {
+                    const val = parseFloat(weightInput.value);
+                    if (!isNaN(val)) {
+                        if (previousUnit === 'kg' && this.value === 'lbs') {
+                            weightInput.value = (val * 2.20462).toFixed(1);
+                        } else if (previousUnit === 'lbs' && this.value === 'kg') {
+                            weightInput.value = (val / 2.20462).toFixed(1);
+                        }
+                    }
+                    previousUnit = this.value;
+                });
+            }
+
+            if (heightInput && heightUnitSelect) {
+                let previousUnit = heightUnitSelect.value;
+                heightUnitSelect.addEventListener('change', function () {
+                    const val = parseFloat(heightInput.value);
+                    if (!isNaN(val)) {
+                        if (previousUnit === 'cm' && this.value === 'in') {
+                            heightInput.value = (val / 2.54).toFixed(0);
+                        } else if (previousUnit === 'in' && this.value === 'cm') {
+                            heightInput.value = (val * 2.54).toFixed(0);
+                        }
+                    }
+                    previousUnit = this.value;
+                });
+            }
+        });
+    </script>
+{% endblock scripts %}

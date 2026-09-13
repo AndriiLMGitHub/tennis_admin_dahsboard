@@ -1,0 +1,339 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'List files' %}{% endblock title %}
+
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans "File Manager" %}</li>
+{% endblock %}
+
+
+{% block main_content %}
+    <!--begin::Card-->
+    <div class="card card-flush pb-0 bgi-position-y-center bgi-no-repeat mb-10"
+         style="background-size: auto calc(100% + 10rem); background-position-x: 100%; background-image: url('{% static 'assets/media/illustrations/sketchy-1/4.png' %}')">
+        <div class="card-header pt-10">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-circle me-5">
+                    <div class="symbol-label bg-transparent text-primary border border-secondary border-dashed">
+                        <i class="ki-outline ki-external-drive fs-2x text-primary"></i>
+                    </div>
+                </div>
+                <!--begin::Title-->
+                <div class="d-flex flex-column">
+                    <h2 class="mb-1">{% trans "File Media Manager" %}</h2>
+                    <div class="text-muted fw-bold">
+                        {{ total_count }} {% trans "items" %}
+                        <span class="mx-3">|</span>
+                        {% trans "Total size:" %} <span class="text-gray-800">{{ total_bytes|filesizeformat }}</span>
+                    </div>
+                </div>
+                <!--end::Title-->
+            </div>
+        </div>
+        <div class="card-body pb-0"></div>
+    </div>
+    <!--end::Card-->
+
+    <!--begin::Card-->
+    <div class="card card-flush">
+        <div class="card-body">
+            <div class="d-flex flex-stack mb-5">
+                <div class="badge badge-lg badge-primary">
+                    <span id="kt_file_manager_items_counter">{{ total_count }} {% trans "items" %}</span>
+                </div>
+            </div>
+
+            <!--begin::Table-->
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5">
+                    <thead>
+                    <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                        <th class="min-w-250px">{% trans 'Name' %}</th>
+                        <th class="min-w-100px">{% trans 'Size' %}</th>
+                        <th class="min-w-125px">{% trans 'Uploaded at' %}</th>
+                        <th class="w-125px text-end pe-4">{% trans 'Actions' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody class="fw-semibold text-gray-600">
+                    {% if all_media %}
+                        {% for item in all_media %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <!-- Іконка -->
+                                        {% if item.media_type == 'video' %}
+                                            <i class="ki-outline ki-youtube fs-2x text-danger me-4"></i>
+                                        {% elif item.media_type == 'link' %}
+                                            <i class="ki-outline ki-fasten fs-2x text-warning me-4"></i>
+                                        {% else %}
+                                            <i class="ki-outline ki-document fs-2x text-primary me-4"></i>
+                                        {% endif %}
+
+                                        <div class="d-flex flex-column">
+                                            {% if item.raw_path %}
+                                                {% if item.media_type == 'link' %}
+                                                    <a href="{{ item.file_url }}" target="_blank"
+                                                       class="text-gray-800 text-hover-primary fw-bold">
+                                                        {{ item.display_name|truncatechars:40 }}
+                                                    </a>
+                                                {% else %}
+                                                    <a href="#"
+                                                       class="text-gray-800 text-hover-primary fw-bold file-preview-trigger"
+                                                       data-url="{{ item.file_url }}"
+                                                       data-name="{{ item.display_name }}">
+                                                        {{ item.display_name|truncatechars:45 }}
+                                                    </a>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="badge badge-light-danger fw-bold fs-9 px-2 py-1 w-auto mt-1">
+                                                    <i class="ki-outline ki-information-5 text-danger fs-10 me-1"></i> {% trans "File Missing" %}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    {% if item.media_type == 'link' %}
+                                        <span class="text-muted">—</span>
+                                    {% elif item.size %}
+                                        <span class="text-gray-700 fw-semibold">{{ item.size|filesizeformat }}</span>
+                                    {% else %}
+                                        <!-- Якщо файл завантажено до введення колонки розміру в БД -->
+                                        <span class="badge badge-light-danger fw-bold fs-9 px-2 py-1">
+                                        {% trans "Unknown" %}
+                                    </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ item.date|date:"d M Y, g:i a" }}</td>
+
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end">
+
+                                        <!-- Share / Copy Link Button -->
+                                        <div class="ms-2">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-icon btn-light btn-active-light-primary"
+                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                <i class="ki-outline ki-fasten fs-5 m-0"></i>
+                                            </button>
+                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-300px"
+                                                 data-kt-menu="true">
+                                                <div class="card card-flush">
+                                                    <div class="card-body p-5">
+                                                        <div class="d-flex flex-column text-start">
+                                                            <div class="d-flex mb-3">
+                                                                <i class="ki-outline ki-check fs-2 text-success me-3"></i>
+                                                                <div class="fs-6 text-gray-900">{% trans "Share Link" %}</div>
+                                                            </div>
+                                                            <div class="position-relative">
+                                                                <input type="text"
+                                                                       class="form-control form-control-sm border-secondary pe-10"
+                                                                       id="share_link_{{ item.id }}"
+                                                                       value="{{ item.file_url }}" readonly/>
+                                                                <button type="button"
+                                                                        class="btn btn-icon btn-sm btn-active-color-primary btn-color-gray-500 position-absolute end-0 top-50 translate-middle-y me-1"
+                                                                        onclick="copyToClipboard('share_link_{{ item.id }}', this)">
+                                                                    <i class="ki-outline ki-copy fs-4"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Download Button -->
+                                        {% if item.media_type != 'link' and item.raw_path %}
+                                            <div class="ms-2">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-icon btn-light btn-active-light-primary"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">
+                                                    <i class="ki-outline ki-dots-square fs-5 m-0"></i>
+                                                </button>
+                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4"
+                                                     data-kt-menu="true">
+                                                    <div class="menu-item px-3">
+                                                        <a href="{{ item.file_url }}" class="menu-link px-3" download>
+                                                            <i class="ki-outline ki-folder-down fs-5 m-0 me-2"></i> {% trans "Download" %}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-15">
+                                <i class="ki-outline ki-folder fs-2x text-gray-400 mb-4 d-block"></i>
+                                <h5 class="fw-bold text-gray-800 mb-1">{% trans "No files uploaded yet" %}</h5>
+                                <p class="text-gray-500 fs-6 mb-0">{% trans "All uploaded documents will be displayed here." %}</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if all_media.has_other_pages %}
+                <div class="d-flex flex-stack flex-wrap pt-10">
+                    <div class="fs-6 fw-semibold text-gray-700">
+                        {% trans "Showing" %} {{ all_media.start_index }} {% trans "to" %} {{ all_media.end_index }} {% trans "of" %} {{ total_count }} {% trans "entries" %}
+                    </div>
+                    <ul class="pagination">
+                        <li class="page-item previous {% if not all_media.has_previous %}disabled{% endif %}">
+                            <a href="{% if all_media.has_previous %}?page=
+                                {{ all_media.previous_page_number }}{% else %}#{% endif %}" class="page-link">
+                                <i class="ki-outline ki-left fs-6"></i>
+                            </a>
+                        </li>
+                        {% for num in all_media.paginator.page_range %}
+                            {% if num == all_media.number %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > all_media.number|add:"-3" and num < all_media.number|add:"3" %}
+                                <li class="page-item"><a href="?page={{ num }}" class="page-link">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item next {% if not all_media.has_next %}disabled{% endif %}">
+                            <a href="{% if all_media.has_next %}?page=
+                                {{ all_media.next_page_number }}{% else %}#{% endif %}" class="page-link">
+                                <i class="ki-outline ki-right fs-6"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal start -->
+    <div class="modal fade" id="kt_file_preview_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="preview_modal_title">{% trans "File Preview" %}</h5>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                         aria-label="Close">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center bg-light"
+                     style="min-height: 300px; max-height: 70vh; overflow-y: auto;">
+                    <div id="preview_content" class="w-100 text-center">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="preview_download_btn" class="btn btn-primary btn-sm" download>
+                        <i class="ki-outline ki-folder-down fs-4 me-1"></i> {% trans "Download File" %}
+                    </a>
+                    <button type="button" class="btn btn-light btn-sm"
+                            data-bs-dismiss="modal">{% trans "Close" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal end -->
+{% endblock main_content %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/custom/apps/file-manager/list.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const previewModalEl = document.getElementById('kt_file_preview_modal');
+            if (!previewModalEl) return;
+
+            const previewModal = new bootstrap.Modal(previewModalEl);
+            const previewContent = document.getElementById('preview_content');
+            const previewTitle = document.getElementById('preview_modal_title');
+            const downloadBtn = document.getElementById('preview_download_btn');
+
+            // Делегування подій для динамічних таблиць (наприклад, DataTables)
+            document.body.addEventListener('click', function (e) {
+                const trigger = e.target.closest('.file-preview-trigger');
+                if (!trigger) return;
+
+                e.preventDefault();
+
+                const fileUrl = trigger.getAttribute('data-url');
+                const fileName = trigger.getAttribute('data-name');
+
+                if (!fileUrl) return;
+
+                // Встановлюємо назву та посилання для downloading
+                previewTitle.textContent = fileName;
+                downloadBtn.setAttribute('href', fileUrl);
+
+                // Очищаємо попередній контент
+                previewContent.innerHTML = '<div class="spinner-border text-primary" role="status"></div>';
+                previewModal.show();
+
+                // Визначаємо розширення файлу
+                const extension = fileUrl.split('.').pop().split('?')[0].toLowerCase();
+
+                // Генеруємо preview залежно від розширення
+                setTimeout(() => {
+                    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
+                        previewContent.innerHTML = `<img src="${fileUrl}" class="img-fluid rounded shadow-sm" style="max-height: 60vh; object-fit: contain;" alt="${fileName}">`;
+                    } else if (['mp4', 'webm', 'ogg', 'mov'].includes(extension)) {
+                        previewContent.innerHTML = `
+                            <video id="preview_video_player"
+                                   controls
+                                   playsinline
+                                   preload="metadata"
+                                   class="w-100 rounded shadow-sm"
+                                   style="max-height: 60vh;"
+                                   src="${fileUrl}">
+                                Your browser does not support the video tag.
+                            </video>`;
+                    } else if (extension === 'pdf') {
+                        previewContent.innerHTML = `<iframe src="${fileUrl}" width="100%" height="500px" style="border: none;" class="rounded shadow-sm"></iframe>`;
+                    } else if (extension === 'txt') {
+                        previewContent.innerHTML = '<div class="spinner-border text-primary" role="status"></div>';
+
+                        fetch(fileUrl)
+                            .then(response => {
+                                if (!response.ok) throw new Error('Failed to fetch');
+                                return response.blob();
+                            })
+                            .then(blob => {
+                                // 🌟 Створюємо новий Blob і примусово додаємо кодування utf-8 в MIME-тип
+                                const utf8Blob = new Blob([blob], {type: 'text/plain;charset=utf-8'});
+                                const blobUrl = URL.createObjectURL(utf8Blob);
+
+                                previewContent.innerHTML = `<iframe src="${blobUrl}" width="100%" height="500px" style="border: none;" class="rounded shadow-sm"></iframe>`;
+                            })
+                            .catch(err => {
+                                console.error("Error loading TXT inside iframe:", err);
+                                previewContent.innerHTML = `<div class="text-center p-5 text-danger">Failed to load text file</div>`;
+                            });
+                    } else {
+                        // Для всіх інших форматів (docx, xlsx, zip), які браузер не вміє показувати сам
+                        previewContent.innerHTML = `
+                    <div class="text-center p-5">
+                        <i class="ki-outline ki-file fs-5x text-muted mb-4 d-block"></i>
+                        <span class="fs-5 fw-semibold text-gray-800 mb-2 d-block">{% trans "Preview not available for this file type" %}</span>
+                        <span class="fs-7 text-muted d-block">${extension.toUpperCase()} File</span>
+                    </div>`;
+                    }
+                }, 150); // Легка затримка для плавного переходу спінера
+            });
+
+            // Зупиняємо відтворення відео, якщо модальне вікно закривають
+            previewModalEl.addEventListener('hidden.bs.modal', function () {
+                previewContent.innerHTML = '';
+            });
+        });
+    </script>
+{% endblock scripts %}

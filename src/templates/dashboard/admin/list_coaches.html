@@ -1,0 +1,168 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Create request' %}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <!-- Розділювач -->
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+
+    <!-- Поточна сторінка (Номер заявки) - Сіра і не клікабельна -->
+    <li class="breadcrumb-item text-gray-500 mx-n1">List coaches</li>
+{% endblock %}
+
+{% block main_content %}
+    <h1 class="mb-8">List coaches</h1>
+    <!--begin::Table-->
+    <div class="card card-flush mt-6 mt-xl-9">
+        <!--begin::Card header-->
+        <div class="card-header mt-5">
+            <!--begin::Card title-->
+            <div class="card-title flex-column">
+                <h3 class="fw-bold mb-1">Active coaches</h3>
+                <div class="fs-6 text-gray-500">Total $260,300 sent so far</div>
+            </div>
+            <!--begin::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar my-1">
+                <!--begin::Select-->
+                <div class="me-6 my-1">
+                    <select id="kt_filter_year" name="year" data-control="select2" data-hide-search="true"
+                            class="w-125px form-select form-select-solid form-select-sm">
+                        <option value="All" selected="selected">All time</option>
+                        <option value="thisyear">This year</option>
+                        <option value="thismonth">This month</option>
+                        <option value="lastmonth">Last month</option>
+                        <option value="last90days">Last 90 days</option>
+                    </select>
+                </div>
+                <!--end::Select-->
+                <!--begin::Select-->
+                <div class="me-4 my-1">
+                    <select id="kt_filter_orders" name="orders" data-control="select2" data-hide-search="true"
+                            class="w-125px form-select form-select-solid form-select-sm">
+                        <option value="All" selected="selected">All Orders</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Declined">Declined</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="In Transit">In Transit</option>
+                    </select>
+                </div>
+                <!--end::Select-->
+                <!--begin::Search-->
+                <div class="d-flex align-items-center position-relative my-1">
+                    <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>
+                    <input type="text" id="kt_filter_search"
+                           class="form-control form-control-solid form-select-sm w-150px ps-9"
+                           placeholder="Search Order"/>
+                </div>
+                <!--end::Search-->
+            </div>
+            <!--begin::Card toolbar-->
+        </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+        <div class="card-body pt-0">
+            <!--begin::Table container-->
+            <div class="table-responsive">
+                <!--begin::Table-->
+                <table id="kt_profile_overview_table"
+                       class="table table-row-bordered table-row-dashed gy-4 align-middle fw-bold">
+                    <thead class="fs-7 text-gray-500 text-uppercase">
+                    <tr>
+                        <th class="min-w-250px">Manager</th>
+                        <th class="min-w-150px">Date</th>
+                        {#<th class="min-w-90px">Amount</th>#}
+                        <th class="min-w-90px">Status</th>
+                        <th class="min-w-50px text-end">Details</th>
+                    </tr>
+                    </thead>
+                    <tbody class="fs-6">
+                    {% for coach in coaches %}
+                        <tr>
+                            <td>
+                                <!--begin::User-->
+                                <div class="d-flex align-items-center">
+                                    <!--begin::Wrapper-->
+                                    <div class="me-5 position-relative">
+                                        <!--begin::Avatar (Динамічний фолбек: Фото АБО Ініціал)-->
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            {% if coach.avatar %}
+                                                <img alt="{{ coach.get_full_name }}" src="{{ coach.avatar.url }}"/>
+                                            {% else %}
+                                                <span class="symbol-label bg-light-{{ coach.avatar_color_class }} text-{{ coach.avatar_color_class }} fw-bold text-uppercase">
+                                                    {{ coach.email|make_list|first }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <!--end::Avatar-->
+                                    </div>
+                                    <!--end::Wrapper-->
+
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <!-- Посилання на профіль тренера (заміни 'coach_profile' на свій URL) -->
+                                        <a href="#"
+                                           class="fs-6 text-gray-800 text-hover-primary fw-bold">
+                                            {{ coach.get_full_name|default:'Joe Dohn' }}
+                                        </a>
+                                        <div class="fw-semibold text-gray-500">{{ coach.email }}</div>
+                                    </div>
+                                    <!--end::Info-->
+                                </div>
+                                <!--end::User-->
+                            </td>
+
+                            <!-- Динамічна дата реєстрації (або дата апруву) -->
+                            <td>{{ coach.date_joined|date:"M j, Y" }}</td>
+
+                            <!-- Замість незрозумілих $750.00 виводимо корисну метрику (наприклад, телефон або спеціалізацію) -->
+                            <!-- <td>{{ coach.phone_number|default:_("No phone") }}</td> -->
+
+                            <!-- Динамічний статус тренера з правильними кольорами -->
+                            <td>
+                                <span class="badge fw-bold px-4 py-3
+                                    {% if coach.coach_status == 'approved' %} badge-light-success
+                                    {% elif coach.coach_status == 'pending' %} badge-light-warning
+                                    {% else %} badge-light-danger {% endif %}">
+                                    {{ coach.get_user_status_display|default:coach.user_status|title }}
+                                </span>
+                            </td>
+
+                            <!-- Динамічне посилання для кнопки View -->
+                            <td class="text-end">
+                                <a href="#" class="btn btn-light btn-sm text-nowrap">
+                                    {% trans "View" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <!-- Захист від порожньої бази даних -->
+                        <tr>
+                            <td colspan="5" class="text-center text-muted fw-semibold py-10">
+                                {% trans "No coaches found in the system." %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!--end::Table-->
+            </div>
+            <!--end::Table container-->
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
+{% endblock main_content %}
+
+{% block scripts %}
+    <!--begin::Vendors Javascript(used for this page only)-->
+    <script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+    <!--end::Vendors Javascript-->
+    <!--begin::Custom Javascript(used for this page only)-->
+    <script src="{% static 'assets/js/custom/apps/projects/project/project.js' %}"></script>
+    <!--end::Custom Javascript(used for this page only)-->
+{% endblock scripts %}

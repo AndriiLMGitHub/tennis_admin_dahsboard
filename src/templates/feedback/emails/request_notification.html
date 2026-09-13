@@ -1,0 +1,120 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% trans 'Platform Notification' %}</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #D5D9E2; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+       style="border-collapse:collapse; background-color:#D5D9E2; padding: 40px 0;">
+    <tbody>
+    <tr>
+        <td align="center">
+
+            <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                   style="max-width: 600px; background-color:#ffffff; border-radius: 24px; margin: 0 auto; overflow: hidden;">
+                <tbody>
+                <tr>
+                    <td style="padding: 45px 40px;">
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td align="center"
+                                    style="font-size: 22px; font-weight: 700; color: #181C32; padding-bottom: 5px; font-family: Arial, Helvetica, sans-serif;">
+                                    {% if recipient_role == 'admin' %}
+                                        {% trans 'New Platform Request' %}
+                                    {% elif recipient_role == 'coach' %}
+                                        {% trans 'New Client Assigned' %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center"
+                                    style="font-size: 15px; color: #7E8299; padding-bottom: 35px; font-family: Arial, Helvetica, sans-serif;">
+                                    {% trans 'Action required for specialty:' %} <strong
+                                        style="color: #181C32;">{{ specialty }}</strong>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="font-size: 16px; font-weight: 600; color: #181C32; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif;">
+                                    {% trans 'Hello,' %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; color: #5E6278; line-height: 1.6; padding-bottom: 25px; font-family: Arial, Helvetica, sans-serif;">
+                                    {% if recipient_role == 'admin' %}
+                                        {% trans 'A new request has been submitted by a client and is waiting for your review. Please assign a suitable specialist.' %}
+                                    {% elif recipient_role == 'coach' %}
+                                        {% trans 'You have been assigned to a new client request. Please review their details and prepare for the consultation.' %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                               style="background: #F9F9F9; border-radius: 12px;">
+                            <tr>
+                                <td style="padding: 25px;">
+                                    <p style="margin: 0 0 10px 0; font-size: 14px; font-family: Arial, Helvetica, sans-serif;">
+                                        <span style="color: #A1A5B7; font-weight: 500;">{% trans 'Client Email:' %}</span><br/>
+                                        <span style="color: #181C32; font-weight: 600;">{{ user_email }}</span>
+                                    </p>
+
+                                    {% if comment %}
+                                        <div style="border-top: 1px dashed #E4E6EF; margin: 15px 0; padding-top: 15px;">
+                                            <span style="color: #A1A5B7; font-weight: 500; font-size: 14px;">{% trans 'Client Comment:' %}</span><br/>
+                                            <p style="margin: 5px 0 0 0; color: #5E6278; font-size: 14px; font-style: italic; line-height: 1.5;">
+                                                "{{ comment }}"
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td align="center" style="padding-top: 35px;">
+                                    {% if recipient_role == 'admin' %}
+                                        <a href="{{ admin_url }}" target="_blank"
+                                           style="background-color:#50cd89; border-radius:6px; display:inline-block; padding:12px 24px; color: #FFFFFF; font-size: 15px; font-weight:600; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">
+                                            {% trans 'Manage Request' %}
+                                        </a>
+                                    {% elif recipient_role == 'coach' %}
+                                        <a href="{{ dashboard_url }}" target="_blank"
+                                           style="background-color:#009ef7; border-radius:6px; display:inline-block; padding:12px 24px; color: #FFFFFF; font-size: 15px; font-weight:600; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">
+                                            {% trans 'View in Dashboard' %}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                <tr>
+                    <td align="center"
+                        style="font-size: 13px; font-weight: 500; color: #A1A5B7; font-family: Arial, Helvetica, sans-serif; padding-top: 20px;">
+                        <p style="margin: 0;">{% trans 'This is an automated notification from the platform.' %}</p>
+                        <p style="margin: 5px 0 0 0;">{% trans 'Please do not reply to this email.' %}</p>
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

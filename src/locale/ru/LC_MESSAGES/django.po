@@ -1,0 +1,1986 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-10 04:39-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: apps/accounts_core/admin.py:18
+msgid "Main"
+msgstr "Главная"
+
+#: apps/accounts_core/admin.py:19
+msgid "Readonly fields"
+msgstr "Только для чтения"
+
+#: apps/accounts_core/admin.py:21
+msgid "Personal info"
+msgstr "Персональная информация"
+
+#: apps/accounts_core/admin.py:24
+msgid "Permissions"
+msgstr "Разрешения"
+
+#: apps/accounts_core/admin.py:25
+msgid "Important dates"
+msgstr "Важные даты"
+
+#: apps/accounts_core/admin.py:29
+msgid "Create user"
+msgstr "Создать пользователя"
+
+#: apps/accounts_core/apps.py:9
+msgid "Accounts Core"
+msgstr "Настройки учетной записи"
+
+#: apps/accounts_core/forms.py:11 templates/account/signup.html:101
+msgid "Coach"
+msgstr "Тренер"
+
+#: apps/accounts_core/forms.py:12 templates/account/signup.html:98
+msgid "Student"
+msgstr "Студент"
+
+#: apps/accounts_core/forms.py:13 apps/consulting/models.py:19
+#: templates/account/signup.html:104
+msgid "Psychology"
+msgstr "Психология"
+
+#: apps/accounts_core/forms.py:14 apps/consulting/models.py:18
+#: templates/account/signup.html:107
+msgid "Nutrition"
+msgstr "Питание"
+
+#: apps/accounts_core/forms.py:21
+msgid "Role"
+msgstr "Роль"
+
+#: apps/accounts_core/forms.py:53 apps/accounts_core/forms.py:102
+#: apps/accounts_core/forms.py:116
+msgid "Enter correct email."
+msgstr "Введите правильный адрес электронной почты."
+
+#: apps/accounts_core/forms.py:54 apps/accounts_core/forms.py:103
+msgid "Enter correct password."
+msgstr "Введите правильный пароль."
+
+#: apps/accounts_core/forms.py:55
+msgid "Enter correct password repeat"
+msgstr "Введите правильный пароль (повторить)"
+
+#: apps/accounts_core/forms.py:112 apps/feedback/models.py:22
+msgid "Email"
+msgstr "Eлектронная почта"
+
+#: apps/accounts_core/models.py:24
+msgid "Email address"
+msgstr "Адрес электронной почты"
+
+#: apps/accounts_core/models.py:32
+msgid "The trainer's personal Telegram channel for receiving client files."
+msgstr "Личный Telegram канал тренера для получения файлов клиентов."
+
+#: apps/accounts_core/models.py:41
+msgid "Upload your avatar to this personal dashboard."
+msgstr "Загрузите свой аватар на эту личную панель управления."
+
+#: apps/accounts_core/models.py:47
+msgid ""
+"Select your country of residence to adapt timezones and regional settings."
+msgstr ""
+"Выберите страну своего проживания, чтобы адаптировать часовые пояса и "
+"региональные настройки."
+
+#: apps/accounts_core/models.py:53
+msgid ""
+"Choose the primary currency for displaying prices and processing payments."
+msgstr ""
+
+#: apps/accounts_core/models.py:59
+msgid "Choose your language"
+msgstr "Выберите основную валюту для отображения цен и обработки платежей."
+
+#: apps/accounts_core/models.py:65
+msgid "Choose your company"
+msgstr "Выберите свою компанию"
+
+#: apps/accounts_core/models.py:71
+msgid "Choose your company site"
+msgstr "Выберите сайт вашей компании"
+
+#: apps/accounts_core/models.py:77
+msgid "Choose your phone number"
+msgstr "Выберите свой номер телефона"
+
+#: apps/accounts_core/models.py:83
+msgid "Choose your timezone"
+msgstr "Выберите свой часовой пояс"
+
+#: apps/accounts_core/utils.py:15
+#, python-format
+msgid "Avatar file size must not exceed %(max)s MB."
+msgstr ""
+
+#: apps/accounts_core/utils.py:18
+msgid "Unsupported image format. Use JPEG, PNG or WebP."
+msgstr "Размер файла аватара не должен превышать %(max)s МБ."
+
+#: apps/accounts_core/validators.py:17
+#, python-format
+msgid "File size extends maximum limit of %(max_size)s MB."
+msgstr "Размер файла превышает максимальный предел в %(max_size)s МБ."
+
+#: apps/accounts_core/views.py:162 apps/accounts_core/views.py:214
+#, fuzzy
+#| msgid "You have successfully registered as a coach."
+msgid "You have successfully updated your profile."
+msgstr "Вы успешно зарегистрировались как тренер."
+
+#: apps/accounts_core/views.py:233
+msgid "You do not have permission to deactivate an account on this endpoint."
+msgstr ""
+"У вас нет разрешения на деактивацию учетной записи на этой конечной точке."
+
+#: apps/accounts_core/views.py:245
+msgid "Your account has been successfully deactivated."
+msgstr "Ваш аккаунт успешно деактивирован."
+
+#: apps/accounts_core/views.py:249
+msgid "You must check the box to confirm deactivation."
+msgstr "Для подтверждения деактивации необходимо поставить галочку."
+
+#: apps/accounts_core/views.py:265
+msgid "You do not have permission to access this security endpoint."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/accounts_core/views.py:273
+msgid ""
+"Users authenticated via social networks are not allowed to change local "
+"passwords."
+msgstr ""
+
+#: apps/accounts_core/views.py:281
+msgid "Your password has been successfully updated."
+msgstr "Ваш пароль успешно обновлен."
+
+#: apps/accounts_core/views.py:284
+msgid "Please correct the errors in the password form."
+msgstr "Пожалуйста, исправьте ошибки в форме ввода пароля."
+
+#: apps/consulting/admin.py:47
+#, fuzzy
+#| msgid "Client Comment"
+msgid "Client Info"
+msgstr "Комментарий клиента"
+
+#: apps/consulting/admin.py:50
+msgid "Details"
+msgstr "Подробности"
+
+#: apps/consulting/admin.py:54
+#, fuzzy
+#| msgid "User Management"
+msgid "Management"
+msgstr "Пользователи"
+
+#: apps/consulting/admin.py:57
+msgid "Timestamps"
+msgstr "Временные метки"
+
+#: apps/consulting/admin.py:102
+msgid "Mark selected requests as 'In Progress'"
+msgstr "Отметьте выбранные запросы как «В процессе выполнения»."
+
+#: apps/consulting/admin.py:107
+msgid "Mark selected requests as 'Completed'"
+msgstr "Отметьте выбранные запросы как «Выполненные»."
+
+#: apps/consulting/admin.py:139
+msgid "System Information"
+msgstr "Информация о системе"
+
+#: apps/consulting/admin.py:142
+msgid "General Materials"
+msgstr "Общие материалы"
+
+#: apps/consulting/admin.py:144
+msgid "Attach standard files or write unstructured comments here."
+msgstr ""
+"Прикрепляйте стандартные файлы или пишите здесь неструктурированные "
+"комментарии."
+
+#: apps/consulting/admin.py:146 apps/consulting/models.py:262
+#: templates/dashboard/coach/requests/detail.html:180
+#: templates/dashboard/student/requests/detail.html:173
+msgid "Overall Assessment"
+msgstr "Общая оценка"
+
+#: apps/consulting/admin.py:149
+#: templates/dashboard/coach/requests/detail.html:185
+#: templates/dashboard/student/requests/detail.html:183
+#, fuzzy
+#| msgid "My Statements"
+msgid "Key Strengths"
+msgstr "Мои заявления"
+
+#: apps/consulting/admin.py:153
+msgid "Priority 1"
+msgstr "Приоритет 1"
+
+#: apps/consulting/admin.py:157
+msgid "Priority 2"
+msgstr "Приоритет 2"
+
+#: apps/consulting/admin.py:161
+msgid "Priority 3"
+msgstr "Приоритет 3"
+
+#: apps/consulting/admin.py:165
+msgid "Action Plan"
+msgstr "План действий"
+
+#: apps/consulting/apps.py:8
+msgid "Consulting"
+msgstr "Консалтинг"
+
+#: apps/consulting/decorators.py:17
+#, fuzzy
+#| msgid "You do not have permission to access this security endpoint."
+msgid "You do not have permission to access the Student dashboard."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/consulting/decorators.py:32
+#, fuzzy
+#| msgid "You do not have permission to access this security endpoint."
+msgid "You do not have permission to access the Coach dashboard."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/consulting/decorators.py:44 apps/consulting/decorators.py:106
+#, fuzzy
+#| msgid "You do not have permission to access this security endpoint."
+msgid "You do not have permission to access the Admin dashboard."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/consulting/decorators.py:62
+#, fuzzy
+#| msgid "You do not have permission to access this security endpoint."
+msgid "You do not have permission to access the Psychology dashboard."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/consulting/decorators.py:83
+#, fuzzy
+#| msgid "You do not have permission to access this security endpoint."
+msgid "You do not have permission to access the Nutrition dashboard."
+msgstr "У вас нет разрешения на доступ к этой точке доступа."
+
+#: apps/consulting/models.py:16
+msgid "Video Analysis Short"
+msgstr "Краткий видеоанализ"
+
+#: apps/consulting/models.py:17
+msgid "Video Analysis Long"
+msgstr "Краткий видеоанализ"
+
+#: apps/consulting/models.py:22
+msgid "Service Name"
+msgstr "Название услуги"
+
+#: apps/consulting/models.py:30
+#: templates/dashboard/coach/requests/detail.html:68
+msgid "Service"
+msgstr "Услуга"
+
+#: apps/consulting/models.py:31
+msgid "Services"
+msgstr "Услуги"
+
+#: apps/consulting/models.py:54 templates/dashboard/admin/list_requests.html:67
+#: templates/dashboard/coach/requests/detail.html:40
+msgid "New"
+msgstr "Новый"
+
+#: apps/consulting/models.py:55 templates/dashboard/admin/list_requests.html:71
+#: templates/dashboard/coach/requests/detail.html:42
+msgid "Assigned"
+msgstr "Назначенный"
+
+#: apps/consulting/models.py:56 templates/dashboard/admin/list_requests.html:75
+#: templates/dashboard/coach/requests/detail.html:44
+msgid "In Progress"
+msgstr "В ходе выполнения"
+
+#: apps/consulting/models.py:57 templates/dashboard/admin/list_requests.html:79
+#: templates/dashboard/coach/requests/detail.html:46
+msgid "Completed"
+msgstr "Завершенный"
+
+#: apps/consulting/models.py:58 templates/dashboard/admin/list_requests.html:83
+#: templates/dashboard/coach/requests/detail.html:48
+msgid "Rejected"
+msgstr "Отклоненный"
+
+#: apps/consulting/models.py:62
+#, fuzzy
+#| msgid "Any Coach"
+msgid "Tennis Coach"
+msgstr "Тренер"
+
+#: apps/consulting/models.py:63
+#, fuzzy
+#| msgid "Nutrition"
+msgid "Nutritionist"
+msgstr "Питание"
+
+#: apps/consulting/models.py:64
+#, fuzzy
+#| msgid "Psychology"
+msgid "Psychologist"
+msgstr "Психология"
+
+#: apps/consulting/models.py:71
+msgid "The type of specialist required for this request."
+msgstr "Тип специалиста, необходимого для выполнения этого запроса."
+
+#: apps/consulting/models.py:82
+msgid "The specific coach assigned to this request. Empty until accepted."
+msgstr ""
+"Конкретный тренер, назначенный этому запросу. Пусто, пока не будет принято."
+
+#: apps/consulting/models.py:89
+#: templates/dashboard/coach/requests/detail.html:87
+msgid "Client Comment"
+msgstr "Комментарий клиента"
+
+#: apps/consulting/models.py:143
+msgid "Request"
+msgstr "Запрос"
+
+#: apps/consulting/models.py:144 templates/includes/menus/_coach_menu.html:31
+#: templates/includes/menus/_psychology_menu.html:31
+#: templates/includes/menus/_student_menu.html:31
+#: templates/includes/menus/_super_admin_menu.html:31
+msgid "Requests"
+msgstr "Запросы"
+
+#: apps/consulting/models.py:153
+#: templates/dashboard/student/requests/create.html:98
+msgid "Video"
+msgstr "Видео"
+
+#: apps/consulting/models.py:154
+msgid "File"
+msgstr "Файл"
+
+#: apps/consulting/models.py:155
+#: templates/dashboard/student/requests/create.html:102
+msgid "Link"
+msgstr "Ссылка"
+
+#: apps/consulting/models.py:166
+msgid "Media"
+msgstr "Мультимедиа"
+
+#: apps/consulting/models.py:167
+msgid "Medias"
+msgstr "Мультимедии"
+
+#: apps/consulting/models.py:173
+msgid "File must be uploaded for video/file media types."
+msgstr "Для видео/файловых медиафайлов необходимо загрузить файл."
+
+#: apps/consulting/models.py:176
+msgid "URL must be provided for link media type."
+msgstr "Для указания типа медиафайла ссылки необходимо указать URL."
+
+#: apps/consulting/models.py:180
+msgid "Only YouTube links are allowed."
+msgstr "Разрешается размещать только ссылки на YouTube."
+
+#: apps/consulting/models.py:243
+msgid "Additional Comments / General Text"
+msgstr "Дополнительные комментарии / Общий текст"
+
+#: apps/consulting/models.py:244
+msgid ""
+"Use this for any general feedback that doesn't fit the structured analysis."
+msgstr ""
+"Используйте это для любой обратной связи общего характера, которая не "
+"соответствует структурированному анализу."
+
+#: apps/consulting/models.py:250
+msgid "Attached PDF"
+msgstr "Прикрепленный PDF-файл"
+
+#: apps/consulting/models.py:254
+#: templates/dashboard/coach/requests/detail.html:122
+#: templates/dashboard/coach/requests/detail.html:285
+#, fuzzy
+#| msgid "Personal info"
+msgid "External Link"
+msgstr "Персональная информация"
+
+#: apps/consulting/models.py:266
+msgid "Key Strength 1"
+msgstr "Ключевое преимущество 1"
+
+#: apps/consulting/models.py:267
+msgid "Key Strength 2"
+msgstr "Ключевое преимущество 2"
+
+#: apps/consulting/models.py:268
+msgid "Key Strength 3"
+msgstr "Ключевое преимущество 3"
+
+#: apps/consulting/models.py:272
+msgid "Priority 1 Issue"
+msgstr "Проблема приоритета 1"
+
+#: apps/consulting/models.py:273
+msgid "Why it matters (1)"
+msgstr "Почему это важно (1)"
+
+#: apps/consulting/models.py:274
+msgid "Recommended drill (1)"
+msgstr "Рекомендуемое упражнение (1)"
+
+#: apps/consulting/models.py:277
+msgid "Priority 2 Issue"
+msgstr "Проблема приоритета 2"
+
+#: apps/consulting/models.py:278
+msgid "Why it matters (2)"
+msgstr "Почему это важно (2)"
+
+#: apps/consulting/models.py:279
+msgid "Recommended drill (2)"
+msgstr "Рекомендуемое упражнение (2)"
+
+#: apps/consulting/models.py:282
+msgid "Priority 3 Issue"
+msgstr "Проблема приоритета 3"
+
+#: apps/consulting/models.py:283
+msgid "Why it matters (3)"
+msgstr "Почему это важно (3)"
+
+#: apps/consulting/models.py:284
+msgid "Recommended drill (3)"
+msgstr "Рекомендуемое упражнение (3)"
+
+#: apps/consulting/models.py:289
+#: templates/dashboard/coach/requests/detail.html:207
+#: templates/dashboard/student/requests/detail.html:288
+msgid "2–4 Week Action Plan"
+msgstr "План действий на 2–4 недели"
+
+#: apps/consulting/models.py:293
+msgid "Report"
+msgstr "Отчет"
+
+#: apps/consulting/models.py:294
+msgid "Reports"
+msgstr "Отчеты"
+
+#: apps/consulting/models.py:314
+msgid "Request Status History"
+msgstr "История статуса запроса"
+
+#: apps/consulting/models.py:315
+msgid "Request Status Histories"
+msgstr "История статусов запросов"
+
+#: apps/consulting/models.py:332
+msgid "Pending Upload"
+msgstr "В ожидании"
+
+#: apps/consulting/models.py:333
+msgid "Pending Uploads"
+msgstr "В ожидании"
+
+#: apps/consulting/validators.py:25
+#, python-format
+msgid "Unsupported format for %(type)s. Allowed formats: %(formats)s"
+msgstr "Неподдерживаемый формат для %(type)s. Допустимые форматы: %(formats)s"
+
+#: apps/consulting/validators.py:40
+#, python-format
+msgid ""
+"The uploaded file is too large. Maximum allowed size for %(type)s is "
+"%(max_size)s MB."
+msgstr ""
+
+#: apps/consulting/validators.py:47
+msgid ""
+"The file could not be verified. It may not have been uploaded to cloud "
+"storage correctly."
+msgstr ""
+"Файл не удалось проверить. Возможно, оно не было загружено в "
+"облако»«Правильное хранение."
+
+#: apps/consulting/views/coach_views.py:45
+#: apps/consulting/views/student_views.py:74
+#: templates/dashboard/coach/requests/detail.html:10
+#: templates/dashboard/coach/requests/list.html:10
+#: templates/dashboard/student/requests/create.html:11
+#: templates/dashboard/student/requests/detail.html:11
+#: templates/dashboard/student/requests/list.html:10
+#: templates/feedback/contact_us.html:14 templates/feedback/faq_page.html:11
+msgid "My Requests"
+msgstr "Мои запросы"
+
+#: apps/consulting/views/coach_views.py:117
+msgid "Request updated successfully."
+msgstr "Запрос успешно обновлен."
+
+#: apps/consulting/views/coach_views.py:123
+msgid "An error occurred while saving. Please try again."
+msgstr "Произошла ошибка при сохранении. Пожалуйста, попробуйте еще раз."
+
+#: apps/consulting/views/student_views.py:159
+msgid "Media file was not uploaded successfully."
+msgstr "Загрузка медиафайла не удалась."
+
+#: apps/consulting/views/student_views.py:171
+msgid "Media link is required"
+msgstr "Требуется ссылка на медиафайл."
+
+#: apps/consulting/views/student_views.py:189
+msgid "Request created successfully"
+msgstr "Запрос успешно создан."
+
+#: apps/consulting/views/student_views.py:233
+msgid "List coaches"
+msgstr "Список тренеров"
+
+#: apps/feedback/admin.py:24
+msgid "Sender Information"
+msgstr "Информация об отправителе"
+
+#: apps/feedback/admin.py:28
+msgid "Message Content"
+msgstr "Содержание сообщения"
+
+#: apps/feedback/admin.py:31
+msgid "System Metadata"
+msgstr "Метаданные системы"
+
+#: apps/feedback/admin.py:83
+msgid "Questions Count"
+msgstr "Вопросы имеют значение"
+
+#: apps/feedback/admin.py:101 apps/feedback/models.py:86
+msgid "Question"
+msgstr "Вопрос"
+
+#: apps/feedback/apps.py:9 apps/feedback/models.py:32
+msgid "Feedback"
+msgstr "Обратная связь"
+
+#: apps/feedback/forms.py:13
+#, fuzzy
+#| msgid "Full Name"
+msgid "Your Name"
+msgstr "Полное имя"
+
+#: apps/feedback/forms.py:14
+#, fuzzy
+#| msgid "Confirm Email"
+msgid "Your Email"
+msgstr "Подтвердите адрес электронной почты"
+
+#: apps/feedback/forms.py:15 apps/feedback/models.py:25
+msgid "Subject"
+msgstr "Тема"
+
+#: apps/feedback/forms.py:17
+msgid "Type your message here..."
+msgstr "Введите ваше сообщение здесь..."
+
+#: apps/feedback/models.py:16
+#, fuzzy
+#| msgid "Users"
+msgid "User"
+msgstr "Список пользователей"
+
+#: apps/feedback/models.py:21
+#, fuzzy
+#| msgid "Full Name"
+msgid "Name"
+msgstr "Полное имя"
+
+#: apps/feedback/models.py:26
+msgid "Message"
+msgstr "Сообщение"
+
+#: apps/feedback/models.py:28 templates/dashboard/coach/requests/detail.html:72
+#, fuzzy
+#| msgid "Created Date"
+msgid "Created at"
+msgstr "Дата создания"
+
+#: apps/feedback/models.py:29
+#, fuzzy
+#| msgid "Created Date"
+msgid "Updated at"
+msgstr "Дата создания"
+
+#: apps/feedback/models.py:33
+msgid "Feedback Emails"
+msgstr "Электронные письма с отзывами"
+
+#: apps/feedback/models.py:62
+msgid "Category Title"
+msgstr "Категория Название"
+
+#: apps/feedback/models.py:63
+msgid "Slug"
+msgstr "Слизняк"
+
+#: apps/feedback/models.py:64 apps/feedback/models.py:90
+msgid "Sort Order"
+msgstr "Порядок сортировки"
+
+#: apps/feedback/models.py:65
+msgid "Is Active"
+msgstr "Активен"
+
+#: apps/feedback/models.py:69
+msgid "FAQ Category"
+msgstr "Категория часто задаваемых вопросов"
+
+#: apps/feedback/models.py:70
+msgid "FAQ Categories"
+msgstr "Часто задаваемые вопросы по категориям"
+
+#: apps/feedback/models.py:84
+msgid "Category"
+msgstr "Категория"
+
+#: apps/feedback/models.py:87
+msgid "Answer"
+msgstr "Отвечать"
+
+#: apps/feedback/models.py:91
+msgid "Is Published"
+msgstr "Опубликовано"
+
+#: apps/feedback/models.py:99
+msgid "FAQ Item"
+msgstr "Часто задаваемые вопросы"
+
+#: apps/feedback/models.py:100
+msgid "FAQ Items"
+msgstr "Часто задаваемые вопросы"
+
+#: apps/feedback/views.py:51
+msgid "Your message has been successfully sent!"
+msgstr "Ваше сообщение успешно отправлено!"
+
+#: apps/feedback/views.py:54
+msgid "Please correct the errors below."
+msgstr "Пожалуйста, исправьте ошибки, указанные ниже."
+
+#: config/settings.py:146
+msgid "English"
+msgstr "Английский"
+
+#: config/settings.py:147
+msgid "Russian"
+msgstr "Русский"
+
+#: templates/account/base_auth.html:141
+#: templates/dashboard/dashboard_base.html:65
+msgid "Success"
+msgstr "Успех"
+
+#: templates/account/base_auth.html:143
+#: templates/dashboard/dashboard_base.html:67
+msgid "Error"
+msgstr "Ошибка"
+
+#: templates/account/base_auth.html:145
+#: templates/dashboard/dashboard_base.html:69
+msgid "Warning"
+msgstr "Предупреждение"
+
+#: templates/account/email_confirm.html:82
+msgid "Welcome to Metronic"
+msgstr "Добро пожаловать в Метроник!"
+
+#: templates/account/email_confirm.html:85
+msgid "This is your opportunity to get creative and make a name"
+msgstr "Это ваш шанс проявить креативность и прославиться."
+
+#: templates/account/email_confirm.html:86
+msgid "that gives readers an idea"
+msgstr "это даёт читателям представление"
+
+#: templates/account/email_confirm.html:102
+msgid "Confirm Email"
+msgstr "Подтвердите адрес электронной почты"
+
+#: templates/account/login.html:7 templates/account/login.html:138
+#: templates/account/login_alt.html:7 templates/account/login_alt.html:164
+msgid "Sign In"
+msgstr "Войти"
+
+#: templates/account/login.html:22 templates/account/login_alt.html:88
+#: templates/account/password_reset.html:20
+#: templates/account/sign_up_coach.html:19 templates/account/signup.html:19
+msgid "Fast, Efficient and Productive"
+msgstr "Быстро, эффективно и продуктивно"
+
+#: templates/account/login.html:57 templates/account/login_alt.html:108
+#: templates/account/sign_up_coach.html:201 templates/account/signup.html:170
+msgid "Sign in"
+msgstr "Войти"
+
+#: templates/account/login.html:60 templates/account/login_alt.html:109
+#: templates/account/sign_up_coach.html:52 templates/account/signup.html:61
+msgid "Your Social Campaigns"
+msgstr "Ваши социальные сети"
+
+#: templates/account/login.html:79 templates/account/login_alt.html:124
+#: templates/account/sign_up_coach.html:71 templates/account/signup.html:70
+msgid "Sign in with"
+msgstr "Войти с помощью"
+
+#: templates/account/login.html:87 templates/account/login_alt.html:129
+#: templates/account/sign_up_coach.html:79 templates/account/signup.html:76
+msgid "Or with email"
+msgstr "Или по электронной почте"
+
+#: templates/account/login.html:117 templates/account/login_alt.html:149
+#: templates/account/sign_up_coach.html:127
+msgid "Password"
+msgstr "Пароль"
+
+#: templates/account/login.html:130 templates/account/login_alt.html:160
+#: templates/account/password_reset.html:49
+msgid "Forgot Password ?"
+msgstr "Забыли пароль ?"
+
+#: templates/account/login.html:148 templates/account/login_alt.html:169
+msgid "Not a Member yet?"
+msgstr "Ещё не являетесь участником?"
+
+#: templates/account/login.html:149 templates/account/login_alt.html:170
+#: templates/account/sign_up_coach.html:189 templates/account/signup.html:159
+msgid "Sign up"
+msgstr "Зарегистрироваться"
+
+#: templates/account/login.html:211 templates/account/login_alt.html:226
+#: templates/account/password_reset.html:136
+#: templates/account/sign_up_coach.html:179
+#: templates/account/sign_up_coach.html:265 templates/account/signup.html:151
+#: templates/account/signup.html:236
+msgid "Terms"
+msgstr "Условия"
+
+#: templates/account/login.html:212 templates/account/login_alt.html:227
+#: templates/account/password_reset.html:137
+#: templates/account/sign_up_coach.html:266 templates/account/signup.html:237
+msgid "Plans"
+msgstr "Планы"
+
+#: templates/account/login.html:213 templates/account/login_alt.html:228
+#: templates/account/password_reset.html:138
+#: templates/account/sign_up_coach.html:267 templates/account/signup.html:238
+#: templates/feedback/contact_us.html:5 templates/feedback/contact_us.html:19
+#: templates/includes/menus/_coach_menu.html:154
+#: templates/includes/menus/_nutrition_menu.html:84
+#: templates/includes/menus/_psychology_menu.html:154
+#: templates/includes/menus/_student_menu.html:154
+msgid "Contact Us"
+msgstr "Связаться с нами"
+
+#: templates/account/password_reset.html:5
+msgid "Reset Password"
+msgstr "Сбросить пароль"
+
+#: templates/account/password_reset.html:52
+msgid "Enter your email to reset your password."
+msgstr "Введите свой адрес электронной почты, чтобы сбросить пароль."
+
+#: templates/account/password_reset.html:70
+msgid "Submit"
+msgstr "Отправить"
+
+#: templates/account/password_reset.html:72
+#: templates/dashboard/coach/profile/security.html:88
+#: templates/dashboard/coach/requests/detail.html:309
+#: templates/dashboard/student/profile/security.html:89
+#: templates/dashboard/student/requests/create.html:146
+msgid "Cancel"
+msgstr "Отмена"
+
+#: templates/account/sign_up_coach.html:5
+#: templates/account/sign_up_coach.html:49 templates/account/signup.html:5
+#: templates/account/signup.html:60
+msgid "Sign Up"
+msgstr "Зарегистрироваться"
+
+#: templates/account/sign_up_coach.html:153 templates/account/signup.html:133
+msgid "Use 8 or more characters with a mix of letters, numbers & symbols."
+msgstr ""
+"Используйте 8 или более символов, сочетающих буквы, цифры и знаки препинания."
+
+#: templates/account/sign_up_coach.html:165
+msgid "Repeat Password"
+msgstr "Повторите пароль"
+
+#: templates/account/sign_up_coach.html:178 templates/account/signup.html:150
+msgid "I Accept the"
+msgstr "Я принимаю"
+
+#: templates/account/sign_up_coach.html:179 templates/account/signup.html:151
+msgid "and"
+msgstr "и"
+
+#: templates/account/sign_up_coach.html:180
+msgid "Privacy Police"
+msgstr "Полиция по защите конфиденциальности"
+
+#: templates/account/sign_up_coach.html:199 templates/account/signup.html:168
+msgid "Already have an Account?"
+msgstr "У вас уже есть аккаунт?"
+
+#: templates/account/signup.html:50
+msgid "Registration Errors:"
+msgstr "Registration Errors:"
+
+#: templates/account/signup.html:95
+msgid "Select your role"
+msgstr "Выберите свою роль"
+
+#: templates/account/signup.html:152
+#, fuzzy
+#| msgid "Privacy Police"
+msgid "Privacy Policy"
+msgstr "Полиция по защите конфиденциальности"
+
+#: templates/account/signup.html:161
+msgid "Please wait..."
+msgstr "Пожалуйста, подождите..."
+
+#: templates/dashboard/admin/list_coaches.html:6
+#: templates/dashboard/admin/list_emails.html:6
+#: templates/dashboard/admin/list_requests.html:6
+#: templates/dashboard/admin/list_students.html:6
+#: templates/dashboard/student/requests/create.html:5
+#: templates/dashboard/student/requests/create.html:14
+#: templates/dashboard/student/requests/create.html:23
+#: templates/dashboard/student/requests/detail.html:5
+#: templates/dashboard/student/requests/list_coaches.html:6
+#: templates/feedback/faq_page.html:5 templates/feedback/faq_page.html:14
+#: templates/includes/menus/_student_menu.html:56
+msgid "Create request"
+msgstr "Создать запрос"
+
+#: templates/dashboard/admin/list_coaches.html:123
+#: templates/dashboard/admin/list_students.html:123
+#: templates/dashboard/student/requests/list_coaches.html:128
+msgid "No phone"
+msgstr "Телефона нет."
+
+#: templates/dashboard/admin/list_coaches.html:138
+#: templates/dashboard/admin/list_requests.html:216
+#: templates/dashboard/admin/list_students.html:139
+#: templates/dashboard/student/requests/list_coaches.html:143
+msgid "View"
+msgstr "Вид"
+
+#: templates/dashboard/admin/list_coaches.html:146
+#: templates/dashboard/student/requests/list_coaches.html:151
+msgid "No coaches found in the system."
+msgstr "В системе не найдено ни одного тренера."
+
+#: templates/dashboard/admin/list_emails.html:12
+#, fuzzy
+#| msgid "Or with email"
+msgid "List emails"
+msgstr "Или по электронной почте"
+
+#: templates/dashboard/admin/list_emails.html:163
+msgid "Star"
+msgstr "Звезда"
+
+#: templates/dashboard/admin/list_emails.html:166
+msgid "Mark as important"
+msgstr "Отметьте как важное"
+
+#: templates/dashboard/admin/list_emails.html:174
+msgid "Avatar"
+msgstr "Аватар"
+
+#: templates/dashboard/admin/list_emails.html:193
+#: templates/dashboard/admin/list_requests.html:114
+#: templates/dashboard/admin/list_requests.html:143
+#: templates/dashboard/coach/requests/detail.html:64
+#, fuzzy
+#| msgid "Client Comment"
+msgid "Client"
+msgstr "Комментарий клиента"
+
+#: templates/dashboard/admin/list_emails.html:197
+#, fuzzy
+#| msgid "Request"
+msgid "Guest"
+msgstr "Запрос"
+
+#: templates/dashboard/admin/list_requests.html:14
+#: templates/dashboard/admin/list_requests.html:18
+#: templates/dashboard/coach/requests/list.html:5
+#: templates/dashboard/student/requests/list.html:5
+#: templates/dashboard/student/requests/list.html:15
+msgid "List requests"
+msgstr "Мои запросы"
+
+#: templates/dashboard/admin/list_requests.html:25
+#, fuzzy
+#| msgid "List requests"
+msgid "Active requests"
+msgstr "Мои запросы"
+
+#: templates/dashboard/admin/list_requests.html:27
+#, fuzzy
+#| msgid "List requests"
+msgid "Total requests:"
+msgstr "Мои запросы"
+
+#: templates/dashboard/admin/list_requests.html:41
+msgid "All time"
+msgstr "За все время"
+
+#: templates/dashboard/admin/list_requests.html:45
+msgid "This month"
+msgstr "В этом месяце"
+
+#: templates/dashboard/admin/list_requests.html:49
+msgid "Last 90 days"
+msgstr "Последние 90 дней"
+
+#: templates/dashboard/admin/list_requests.html:53
+msgid "This year"
+msgstr "В этом году"
+
+#: templates/dashboard/admin/list_requests.html:63
+msgid "All Statuses"
+msgstr "Все статусы"
+
+#: templates/dashboard/admin/list_requests.html:88
+msgid "Reset"
+msgstr "Перезагрузить"
+
+#: templates/dashboard/admin/list_requests.html:96
+#, fuzzy
+#| msgid "Search..."
+msgid "Search requests..."
+msgstr "Поиск..."
+
+#: templates/dashboard/admin/list_requests.html:115
+#, fuzzy
+#| msgid "Assigned Coach"
+msgid "Assigned Specialist"
+msgstr "Назначенный тренер"
+
+#: templates/dashboard/admin/list_requests.html:116
+#, fuzzy
+#| msgid "Services"
+msgid "Service Details"
+msgstr "Услуги"
+
+#: templates/dashboard/admin/list_requests.html:117
+#: templates/dashboard/coach/requests/detail.html:31
+msgid "Status"
+msgstr "Cтатус"
+
+#: templates/dashboard/admin/list_requests.html:118
+#, fuzzy
+#| msgid "Notifications"
+msgid "Actions"
+msgstr "Уведомления"
+
+#: templates/dashboard/admin/list_requests.html:129
+msgid "Client Avatar"
+msgstr "Аватар клиента"
+
+#: templates/dashboard/admin/list_requests.html:178
+#, fuzzy
+#| msgid "Assigned"
+msgid "Not Assigned"
+msgstr "Назначенный"
+
+#: templates/dashboard/admin/list_requests.html:190
+msgid "Due"
+msgstr "Должный"
+
+#: templates/dashboard/admin/list_requests.html:223
+#, fuzzy
+#| msgid "My requests"
+msgid "No requests found."
+msgstr "Мои запросы"
+
+#: templates/dashboard/admin/list_students.html:14
+#: templates/dashboard/admin/list_students.html:18
+#, fuzzy
+#| msgid "List requests"
+msgid "List students"
+msgstr "Мои запросы"
+
+#: templates/dashboard/admin/list_students.html:129
+msgid "Active"
+msgstr "Активный"
+
+#: templates/dashboard/admin/list_students.html:131
+msgid "Inactive"
+msgstr "Неактивный"
+
+#: templates/dashboard/admin/list_students.html:147
+msgid "No students found in the system."
+msgstr "В системе не обнаружено ни одного студента."
+
+#: templates/dashboard/coach/profile/edit.html:6
+#: templates/dashboard/coach/profile/security.html:6
+#: templates/dashboard/coach/profile/view.html:5
+#, fuzzy
+#| msgid "My Profile"
+msgid "Coach profile"
+msgstr "Мой профиль"
+
+#: templates/dashboard/coach/profile/security.html:76
+#: templates/dashboard/student/profile/security.html:77
+msgid "A verification link will be sent to this new address."
+msgstr "В системе не обнаружено ни одного студента."
+
+#: templates/dashboard/coach/profile/security.html:84
+#: templates/dashboard/student/profile/security.html:85
+#, fuzzy
+#| msgid "Confirm Email"
+msgid "Change Email"
+msgstr "Подтвердите адрес электронной почты"
+
+#: templates/dashboard/coach/profile/security.html:120
+#: templates/dashboard/student/profile/security.html:122
+msgid "Password Management Restrictions"
+msgstr ""
+
+#: templates/dashboard/coach/profile/security.html:122
+#: templates/dashboard/student/profile/security.html:124
+msgid ""
+"Your account is securely linked with a social provider. You can manage your "
+"password and security settings directly through your identity provider's "
+"platform."
+msgstr ""
+
+#: templates/dashboard/coach/profile/view.html:21
+#: templates/dashboard/student/profile/view.html:21
+msgid "Profile Details"
+msgstr "Подробная информация о профиле"
+
+#: templates/dashboard/coach/profile/view.html:27
+#: templates/dashboard/student/profile/view.html:27
+msgid "Full Name"
+msgstr "Полное имя"
+
+#: templates/dashboard/coach/profile/view.html:30
+#: templates/dashboard/student/profile/view.html:30
+msgid "Not set"
+msgstr "Не задано"
+
+#: templates/dashboard/coach/requests/detail.html:5
+msgid "Detail request from student"
+msgstr "Запрос студента на предоставление подробной информации"
+
+#: templates/dashboard/coach/requests/detail.html:18
+#, fuzzy
+#| msgid "Request ID"
+msgid "Request Details:"
+msgstr "Идентификатор запроса"
+
+#: templates/dashboard/coach/requests/detail.html:50
+msgid "Update the current status of this request."
+msgstr "Обновите текущий статус этого запроса."
+
+#: templates/dashboard/coach/requests/detail.html:57
+#, fuzzy
+#| msgid "Request ID"
+msgid "Request Details"
+msgstr "Идентификатор запроса"
+
+#: templates/dashboard/coach/requests/detail.html:76
+#: templates/dashboard/coach/requests/list.html:64
+msgid "Deadline"
+msgstr "Крайний срок"
+
+#: templates/dashboard/coach/requests/detail.html:80
+msgid "Not specified"
+msgstr "Не указан"
+
+#: templates/dashboard/coach/requests/detail.html:91
+#, fuzzy
+#| msgid "No comment provided."
+msgid "No text description provided."
+msgstr "Комментарии отсутствуют."
+
+#: templates/dashboard/coach/requests/detail.html:96
+#, fuzzy
+#| msgid "Student"
+msgid "Student Materials"
+msgstr "Студент"
+
+#: templates/dashboard/coach/requests/detail.html:107
+#, fuzzy
+#| msgid "Upload File"
+msgid "Download File"
+msgstr "Загрузить файл"
+
+#: templates/dashboard/coach/requests/detail.html:108
+msgid "Attached File"
+msgstr "Прикрепленный файл"
+
+#: templates/dashboard/coach/requests/detail.html:111
+#: templates/dashboard/coach/requests/detail.html:125
+msgid "ago"
+msgstr "назад"
+
+#: templates/dashboard/coach/requests/detail.html:132
+msgid "No files or links attached to this request."
+msgstr "К этому запросу не прикреплены никакие файлы или ссылки."
+
+#: templates/dashboard/coach/requests/detail.html:149
+msgid "Coach Report & Response"
+msgstr "Отчет и ответ тренера"
+
+#: templates/dashboard/coach/requests/detail.html:159
+msgid "Structured Analysis"
+msgstr "Структурированный анализ"
+
+#: templates/dashboard/coach/requests/detail.html:165
+msgid "Top 3 Priorities"
+msgstr "Три главных приоритета"
+
+#: templates/dashboard/coach/requests/detail.html:171
+msgid "Files & General Comments"
+msgstr "Файлы и общие комментарии"
+
+#: templates/dashboard/coach/requests/detail.html:182
+msgid "General evaluation..."
+msgstr "Общая оценка..."
+
+#: templates/dashboard/coach/requests/detail.html:188
+msgid "Strength 1"
+msgstr "Сила 1"
+
+#: templates/dashboard/coach/requests/detail.html:193
+msgid "Strength 2"
+msgstr "Сила 2"
+
+#: templates/dashboard/coach/requests/detail.html:198
+msgid "Strength 3"
+msgstr "Сила 3"
+
+#: templates/dashboard/coach/requests/detail.html:209
+msgid "Primary practice focus for the next 2-4 weeks..."
+msgstr ""
+"Основное внимание в ходе практики будет уделено следующим 2-4 неделям..."
+
+#: templates/dashboard/coach/requests/detail.html:215
+msgid "Priority #1"
+msgstr "Приоритет №1"
+
+#: templates/dashboard/coach/requests/detail.html:217
+#: templates/dashboard/coach/requests/detail.html:238
+#: templates/dashboard/coach/requests/detail.html:259
+msgid "Issue"
+msgstr "Проблема"
+
+#: templates/dashboard/coach/requests/detail.html:223
+#: templates/dashboard/coach/requests/detail.html:244
+#: templates/dashboard/coach/requests/detail.html:265
+msgid "Why it matters"
+msgstr "Почему это важно"
+
+#: templates/dashboard/coach/requests/detail.html:228
+#: templates/dashboard/coach/requests/detail.html:249
+#: templates/dashboard/coach/requests/detail.html:270
+msgid "Recommended drill or exercise"
+msgstr "Рекомендуемое упражнение или тренировка"
+
+#: templates/dashboard/coach/requests/detail.html:236
+msgid "Priority #2"
+msgstr "Приоритет №2"
+
+#: templates/dashboard/coach/requests/detail.html:257
+msgid "Priority #3"
+msgstr "Приоритет №3"
+
+#: templates/dashboard/coach/requests/detail.html:280
+#: templates/dashboard/student/requests/detail.html:297
+#, fuzzy
+#| msgid "Client Comment"
+msgid "Additional Comments"
+msgstr "Комментарий клиента"
+
+#: templates/dashboard/coach/requests/detail.html:282
+msgid ""
+"Provide any additional advice or feedback that does not fit into the "
+"structured analysis..."
+msgstr ""
+"Предоставьте любые дополнительные советы или отзывы, которые не вписываются "
+"в структурированный анализ..."
+
+#: templates/dashboard/coach/requests/detail.html:288
+msgid "Attach an external resource, video, or shared document link."
+msgstr "Прикрепите ссылку на внешний ресурс, видео или общий документ."
+
+#: templates/dashboard/coach/requests/detail.html:291
+msgid "Attach PDF File"
+msgstr "Прикрепить PDF-файл"
+
+#: templates/dashboard/coach/requests/detail.html:296
+msgid "Current File"
+msgstr "Текущий файл"
+
+#: templates/dashboard/coach/requests/detail.html:300
+msgid "Upload a customized plan or document. Only PDF files are accepted."
+msgstr ""
+"Загрузите индивидуальный план или документ. Принимаются только файлы PDF."
+
+#: templates/dashboard/coach/requests/detail.html:311
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: templates/dashboard/coach/requests/list.html:36
+msgid "Specialty"
+msgstr "Специализация"
+
+#: templates/dashboard/coach/requests/list.html:76
+msgid "No additional comments from the client."
+msgstr "Дополнительные замечания от клиента отсутствуют."
+
+#: templates/dashboard/coach/requests/list.html:82
+#: templates/dashboard/student/requests/detail.html:74
+msgid "Progress"
+msgstr "В ходе выполнения"
+
+#: templates/dashboard/coach/requests/list.html:99
+msgid "View Details"
+msgstr "Просмотреть подробности"
+
+#: templates/dashboard/coach/requests/list.html:111
+#, fuzzy
+#| msgid "My requests"
+msgid "No requests found"
+msgstr "Мои запросы"
+
+#: templates/dashboard/coach/requests/list.html:113
+#, fuzzy
+#| msgid "You don't have any requests yet."
+msgid "You currently do not have any service requests."
+msgstr "У вас пока нет запросов."
+
+#: templates/dashboard/dashboard_base.html:6
+msgid "Dashboard"
+msgstr "Панель управления"
+
+#: templates/dashboard/dashboard_base.html:71
+msgid "Info"
+msgstr "Информация"
+
+#: templates/dashboard/dashboard_base.html:153
+msgid "Home"
+msgstr "Домашняя"
+
+#: templates/dashboard/dashboard_base.html:162
+msgid "Pages"
+msgstr "Страницы"
+
+#: templates/dashboard/dashboard_base.html:171
+msgid "Apps"
+msgstr "Приложения"
+
+#: templates/dashboard/dashboard_base.html:180
+msgid "Help"
+msgstr "Помощь"
+
+#: templates/dashboard/dashboard_base.html:223
+msgid "Search..."
+msgstr "Поиск..."
+
+#: templates/dashboard/dashboard_base.html:301
+msgid "My Profile"
+msgstr "Мой профиль"
+
+#: templates/dashboard/dashboard_base.html:309
+#: templates/dashboard/dashboard_base.html:313
+#: templates/includes/menus/_coach_menu.html:44
+#: templates/includes/menus/_psychology_menu.html:44
+#: templates/includes/menus/_student_menu.html:44
+msgid "My requests"
+msgstr "Мои запросы"
+
+#: templates/dashboard/dashboard_base.html:322
+msgid "My Subscription"
+msgstr "Моя подписка"
+
+#: templates/dashboard/dashboard_base.html:330
+msgid "Referrals"
+msgstr "Направления"
+
+#: templates/dashboard/dashboard_base.html:336
+msgid "Billing"
+msgstr "Выставление счетов"
+
+#: templates/dashboard/dashboard_base.html:341
+msgid "Payments"
+msgstr "Платежи"
+
+#: templates/dashboard/dashboard_base.html:347
+msgid "Statements"
+msgstr "Заявления"
+
+#: templates/dashboard/dashboard_base.html:363
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: templates/dashboard/dashboard_base.html:375
+msgid "My Statements"
+msgstr "Мои заявления"
+
+#: templates/dashboard/dashboard_base.html:385
+msgid "Mode"
+msgstr "Режим"
+
+#: templates/dashboard/dashboard_base.html:401
+msgid "Light"
+msgstr "Cветлый"
+
+#: templates/dashboard/dashboard_base.html:412
+msgid "Dark"
+msgstr "Темный"
+
+#: templates/dashboard/dashboard_base.html:423
+msgid "System"
+msgstr "Системый"
+
+#: templates/dashboard/dashboard_base.html:446
+msgid "Language"
+msgstr "Язык"
+
+#: templates/dashboard/dashboard_base.html:498
+msgid "Account Settings"
+msgstr "Настройки учетной записи"
+
+#: templates/dashboard/dashboard_base.html:506
+msgid "Sign Out"
+msgstr "Выйти"
+
+#: templates/dashboard/nutrition/nutrition.html:4
+#, fuzzy
+#| msgid "Dashboard"
+msgid "Nutrition Dashboard"
+msgstr "Панель управления"
+
+#: templates/dashboard/nutrition/nutrition.html:10
+#: templates/dashboard/psychology/view.html:10
+msgid "Welcome back,"
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:11
+#: templates/dashboard/psychology/view.html:11
+msgid "Nutrition Specialist Workplace"
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:23
+#: templates/dashboard/psychology/view.html:23
+#, fuzzy
+#| msgid "Account Settings"
+msgid "Account Review Pending"
+msgstr "Настройки учетной записи"
+
+#: templates/dashboard/nutrition/nutrition.html:25
+#: templates/dashboard/psychology/view.html:25
+msgid ""
+"Your professional profile is currently under review by our administration. "
+"This process usually takes up to 24 hours. You will receive an email "
+"notification once your workplace is fully activated."
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:39
+#: templates/dashboard/psychology/view.html:39
+msgid "Application Declined"
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:41
+#: templates/dashboard/psychology/view.html:41
+msgid ""
+"Regrettably, your specialist application has been declined by the "
+"administration. If you believe this is a mistake or wish to provide "
+"additional certifications, please contact our support desk."
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:55
+#: templates/dashboard/psychology/view.html:55
+#, fuzzy
+#| msgid "Accounts Core"
+msgid "Account Verified"
+msgstr "Настройки учетной записи"
+
+#: templates/dashboard/nutrition/nutrition.html:57
+#: templates/dashboard/psychology/view.html:57
+msgid ""
+"Your professional profile has been fully verified and activated by the "
+"administration. Welcome to your workspace!"
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:64
+#: templates/dashboard/psychology/view.html:64
+msgid ""
+"Here you will manage your consultations, student mental health logs, and "
+"appointment requests."
+msgstr ""
+
+#: templates/dashboard/nutrition/nutrition.html:69
+#: templates/dashboard/psychology/view.html:69
+msgid "Go to schedules"
+msgstr ""
+
+#: templates/dashboard/psychology/view.html:4
+#, fuzzy
+#| msgid "Psychology"
+msgid "Psychologist Dashboard"
+msgstr "Психология"
+
+#: templates/dashboard/student/profile/edit.html:6
+#: templates/dashboard/student/profile/security.html:7
+#: templates/dashboard/student/profile/view.html:5
+#, fuzzy
+#| msgid "Student"
+msgid "Student profile"
+msgstr "Студент"
+
+#: templates/dashboard/student/profile/edit.html:65
+#, fuzzy
+#| msgid "Confirm Email"
+msgid "Change avatar"
+msgstr "Подтвердите адрес электронной почты"
+
+#: templates/dashboard/student/profile/edit.html:72
+msgid "Allowed file types: png, jpg, jpeg. Max 5 MB allowed."
+msgstr ""
+"Допустимые типы файлов: png, jpg, jpeg. Максимальный допустимый размер: 5 МБ."
+
+#: templates/dashboard/student/requests/create.html:33
+msgid "Select service type"
+msgstr "Выберите тип услуги"
+
+#: templates/dashboard/student/requests/create.html:36
+msgid "Choose Service"
+msgstr "Услуга"
+
+#: templates/dashboard/student/requests/create.html:49
+msgid "Choose the type of analysis you need."
+msgstr "Выберите необходимый тип анализа."
+
+#: templates/dashboard/student/requests/create.html:53
+#| msgid "Select media type"
+msgid "Select Type"
+msgstr "Выберите тип помощи"
+
+#: templates/dashboard/student/requests/create.html:62
+#| msgid "Select media type"
+msgid "Select Specialty"
+msgstr "Выберите тип"
+
+#: templates/dashboard/student/requests/create.html:79
+msgid "Comment"
+msgstr "Комментарий клиента"
+
+#: templates/dashboard/student/requests/create.html:85
+msgid "Provide specific details or questions for the coach."
+msgstr "Предоставьте тренеру конкретные сведения или вопросы."
+
+#: templates/dashboard/student/requests/create.html:89
+msgid "Select media type"
+msgstr "Выберите тип носителя"
+
+#: templates/dashboard/student/requests/create.html:100
+msgid "Document / File"
+msgstr "Документ / Файл"
+
+#: templates/dashboard/student/requests/create.html:104
+msgid "Choose how you want to provide your data."
+msgstr "Выберите способ предоставления данных."
+
+#: templates/dashboard/student/requests/create.html:108
+msgid "Upload File"
+msgstr "Загрузить файл"
+
+#: templates/dashboard/student/requests/create.html:125
+msgid "Max file size is 100MB."
+msgstr "Максимальный размер файла — 100 МБ."
+
+#: templates/dashboard/student/requests/create.html:129
+msgid "YouTube Link"
+msgstr "Ссылка на YouTube"
+
+#: templates/dashboard/student/requests/create.html:141
+msgid "Please provide a valid YouTube URL."
+msgstr "Пожалуйста, укажите действительную ссылку на YouTube."
+
+#: templates/dashboard/student/requests/create.html:149
+msgid "Submit Request"
+msgstr "Создать запрос"
+
+#: templates/dashboard/student/requests/create.html:179
+#| msgid "Upload File"
+msgid "Upload Video File"
+msgstr "Загрузить файл"
+
+#: templates/dashboard/student/requests/create.html:181
+#, fuzzy
+#| msgid "Max file size is 100MB."
+msgid "Max video size is 100MB."
+msgstr "Максимальный размер файла — 100 МБ."
+
+#: templates/dashboard/student/requests/create.html:185
+#, fuzzy
+#| msgid "Upload File"
+msgid "Upload Document"
+msgstr "Загрузить файл"
+
+#: templates/dashboard/student/requests/create.html:187
+#, fuzzy
+#| msgid "Max file size is 100MB."
+msgid "Max document size is 10MB."
+msgstr "Максимальный размер файла — 100 МБ."
+
+#: templates/dashboard/student/requests/create.html:210
+msgid "Invalid video format!"
+msgstr "Неверный формат видео!"
+
+#: templates/dashboard/student/requests/create.html:215
+msgid "Invalid document format!"
+msgstr "Неверный формат документа!"
+
+#: templates/dashboard/student/requests/create.html:223
+#, fuzzy
+#| msgid "File must be uploaded for video/file media types."
+msgid "File is too large for this media type!"
+msgstr "Для видео/файловых медиафайлов необходимо загрузить файл."
+
+#: templates/dashboard/student/requests/create.html:237
+msgid "Preparing cloud upload..."
+msgstr "Подготовка к загрузке в облако..."
+
+#: templates/dashboard/student/requests/create.html:271
+#, fuzzy
+#| msgid "Upload File"
+msgid "Uploaded"
+msgstr "Загрузить файл"
+
+#: templates/dashboard/student/requests/create.html:277
+msgid "File has been uploaded successfully!"
+msgstr "Файл успешно загружен!"
+
+#: templates/dashboard/student/requests/detail.html:64
+msgid "No comment provided."
+msgstr "Комментарии отсутствуют."
+
+#: templates/dashboard/student/requests/detail.html:104
+#: templates/dashboard/student/requests/list.html:58
+msgid "Created Date"
+msgstr "Дата создания"
+
+#: templates/dashboard/student/requests/detail.html:117
+msgid "Pending"
+msgstr "В ожидании"
+
+#: templates/dashboard/student/requests/detail.html:121
+msgid "Assigned Coach"
+msgstr "Назначенный тренер"
+
+#: templates/dashboard/student/requests/detail.html:131
+msgid "Request ID"
+msgstr "Идентификатор запроса"
+
+#: templates/dashboard/student/requests/detail.html:152
+msgid "Coach Response & Analysis"
+msgstr "Ответы и анализ тренера"
+
+#: templates/dashboard/student/requests/detail.html:154
+msgid "Provided by"
+msgstr "Предоставлено"
+
+#: templates/dashboard/student/requests/detail.html:163
+msgid "Generate .docx"
+msgstr "Сгенерировать файл .docx"
+
+#: templates/dashboard/student/requests/detail.html:207
+msgid "Top Priorities for Improvement"
+msgstr "Главные приоритеты для улучшения"
+
+#: templates/dashboard/student/requests/detail.html:217
+#: templates/dashboard/student/requests/detail.html:240
+#: templates/dashboard/student/requests/detail.html:263
+msgid "Why it matters:"
+msgstr "Почему это важно:"
+
+#: templates/dashboard/student/requests/detail.html:225
+#: templates/dashboard/student/requests/detail.html:248
+#: templates/dashboard/student/requests/detail.html:271
+msgid "Recommended Drill/Exercise:"
+msgstr "Рекомендуемое упражнение:"
+
+#: templates/dashboard/student/requests/detail.html:308
+msgid "Attached Resources"
+msgstr "Приложенные материалы"
+
+#: templates/dashboard/student/requests/detail.html:321
+#, fuzzy
+#| msgid "My Profile"
+msgid "Coach Report"
+msgstr "Мой профиль"
+
+#: templates/dashboard/student/requests/detail.html:323
+msgid "PDF Document"
+msgstr "PDF-документ"
+
+#: templates/dashboard/student/requests/detail.html:344
+msgid "External Resource"
+msgstr "Внешний ресурс"
+
+#: templates/dashboard/student/requests/detail.html:346
+#, fuzzy
+#| msgid "Link"
+msgid "Web Link"
+msgstr "Ссылка"
+
+#: templates/dashboard/student/requests/detail.html:365
+#, fuzzy
+#| msgid "Rejected"
+msgid "Request Rejected"
+msgstr "Отклоненный"
+
+#: templates/dashboard/student/requests/detail.html:367
+msgid ""
+"This request has been rejected. No further report or response will be "
+"provided."
+msgstr ""
+"Этот запрос был отклонен. Никакого дальнейшего отчета или ответа "
+"предоставлено не будет."
+
+#: templates/dashboard/student/requests/detail.html:376
+msgid "Awaiting Coach Response"
+msgstr "Ожидается ответ тренера."
+
+#: templates/dashboard/student/requests/detail.html:378
+msgid ""
+"Your assigned coach has not provided a final report or response yet. Please "
+"check back later."
+msgstr ""
+"Ваш назначенный тренер еще не предоставил окончательный отчет или ответ. "
+"Пожалуйста, зайдите позже."
+
+#: templates/dashboard/student/requests/files/files_attach.html:5
+#, fuzzy
+#| msgid "List coaches"
+msgid "List files"
+msgstr "Список тренеров"
+
+#: templates/dashboard/student/requests/files/files_attach.html:10
+msgid "File Manager"
+msgstr "Файловый менеджер"
+
+#: templates/dashboard/student/requests/files/files_attach.html:55
+#: templates/dashboard/student/requests/files/files_attach.html:62
+msgid "Searching for files and links..."
+msgstr "Поиск файлов и ссылок..."
+
+#: templates/dashboard/student/requests/files/files_attach.html:284
+#, fuzzy
+#| msgid "My requests"
+msgid "Nothing found."
+msgstr "Мои запросы"
+
+#: templates/dashboard/student/requests/files/files_attach.html:285
+#, fuzzy
+#| msgid "You don't have any requests yet."
+msgid "You don't have any files uploaded yet."
+msgstr "У вас пока нет запросов."
+
+#: templates/dashboard/student/requests/list.html:101
+#: templates/dashboard/student/requests/list.html:102
+#, fuzzy
+#| msgid "Assigned"
+msgid "Unassigned"
+msgstr "Назначенный"
+
+#: templates/dashboard/student/requests/list.html:112
+#, fuzzy
+#| msgid "Awaiting Coach Response"
+msgid "Waiting for Coach"
+msgstr "Ожидается ответ тренера."
+
+#: templates/dashboard/student/requests/list.html:131
+msgid "You don't have any requests yet."
+msgstr "У вас пока нет запросов."
+
+#: templates/dashboard/student/requests/list.html:134
+msgid "Create your first request"
+msgstr "Создать запрос"
+
+#: templates/dashboard/student/requests/list.html:145
+msgid "Showing"
+msgstr "Показано от"
+
+#: templates/dashboard/student/requests/list.html:145
+msgid "to"
+msgstr "до"
+
+#: templates/dashboard/student/requests/list.html:145
+msgid "of"
+msgstr "из"
+
+#: templates/dashboard/student/requests/list.html:145
+msgid "entries"
+msgstr "записей"
+
+#: templates/feedback/contact_us.html:12
+#, fuzzy
+#| msgid "Assigned"
+msgid "Assigned to me"
+msgstr "Назначенный"
+
+#: templates/feedback/contact_us.html:36
+msgid "Send Us an Email"
+msgstr "Отправьте нам электронное письмо"
+
+#: templates/feedback/contact_us.html:42
+msgid "Submission Error"
+msgstr "Ошибка отправки"
+
+#: templates/feedback/contact_us.html:94
+msgid "Send Feedback"
+msgstr "Отправить отзыв"
+
+#: templates/feedback/contact_us.html:111
+msgid "Let’s Speak"
+msgstr "Давайте поговорим"
+
+#: templates/feedback/contact_us.html:118
+msgid "Our Head Office"
+msgstr "Наш головной офис"
+
+#: templates/feedback/emails/request_notification.html:8
+#, fuzzy
+#| msgid "Notifications"
+msgid "Platform Notification"
+msgstr "Уведомления"
+
+#: templates/feedback/emails/request_notification.html:29
+#, fuzzy
+#| msgid "Create Request"
+msgid "New Platform Request"
+msgstr "Создать запрос"
+
+#: templates/feedback/emails/request_notification.html:31
+msgid "New Client Assigned"
+msgstr "Назначен новый клиент."
+
+#: templates/feedback/emails/request_notification.html:38
+msgid "Action required for specialty:"
+msgstr "Для получения данной специализации необходимы следующие действия:"
+
+#: templates/feedback/emails/request_notification.html:47
+msgid "Hello,"
+msgstr "Привет,"
+
+#: templates/feedback/emails/request_notification.html:53
+msgid ""
+"A new request has been submitted by a client and is waiting for your review. "
+"Please assign a suitable specialist."
+msgstr ""
+"Клиент отправил новый запрос, который ожидает вашего рассмотрения. "
+"Пожалуйста, назначьте подходящего специалиста."
+
+#: templates/feedback/emails/request_notification.html:55
+msgid ""
+"You have been assigned to a new client request. Please review their details "
+"and prepare for the consultation."
+msgstr ""
+"Вам назначен новый клиент. Пожалуйста, ознакомьтесь с его данными и "
+"подготовьтесь к консультации."
+
+#: templates/feedback/emails/request_notification.html:66
+#, fuzzy
+#| msgid "Confirm Email"
+msgid "Client Email:"
+msgstr "Подтвердите адрес электронной почты"
+
+#: templates/feedback/emails/request_notification.html:72
+#, fuzzy
+#| msgid "Client Comment"
+msgid "Client Comment:"
+msgstr "Комментарий клиента"
+
+#: templates/feedback/emails/request_notification.html:88
+#, fuzzy
+#| msgid "My Requests"
+msgid "Manage Request"
+msgstr "Мои запросы"
+
+#: templates/feedback/emails/request_notification.html:93
+#, fuzzy
+#| msgid "Dashboard"
+msgid "View in Dashboard"
+msgstr "Панель управления"
+
+#: templates/feedback/emails/request_notification.html:109
+msgid "This is an automated notification from the platform."
+msgstr "Это автоматическое уведомление от платформы."
+
+#: templates/feedback/emails/request_notification.html:110
+msgid "Please do not reply to this email."
+msgstr "Пожалуйста, не отвечайте на это письмо."
+
+#: templates/feedback/faq_page.html:72
+msgid "Frequesntly Asked Questions"
+msgstr ""
+
+#: templates/feedback/faq_page.html:76
+msgid ""
+"First, a disclaimer – the entire process of writing a blog post often takes "
+"more than a couple of hours, even if you can type eighty words as per minute "
+"and your writing skills are sharp."
+msgstr ""
+
+#: templates/feedback/faq_page.html:113
+msgid "No questions in this category yet."
+msgstr "В этой категории пока нет вопросов."
+
+#: templates/feedback/faq_page.html:124
+msgid "No FAQ categories available at the moment."
+msgstr "В данный момент разделы часто задаваемых вопросов отсутствуют."
+
+#: templates/includes/_card_intro.html:32
+#, fuzzy
+#| msgid "Create user"
+msgid "Coach user"
+msgstr "Создать пользователя"
+
+#: templates/includes/_card_intro.html:34
+#, fuzzy
+#| msgid "Student"
+msgid "Student user"
+msgstr "Студент"
+
+#: templates/includes/_card_intro.html:148
+#, fuzzy
+#| msgid "Service"
+msgid "Overview"
+msgstr "Услуга"
+
+#: templates/includes/_card_intro.html:156
+#, fuzzy
+#| msgid "Account Settings"
+msgid "Settings"
+msgstr "Настройки учетной записи"
+
+#: templates/includes/_card_intro.html:164
+msgid "Security"
+msgstr "Безопасность"
+
+#: templates/includes/menus/_coach_menu.html:19
+#: templates/includes/menus/_nutrition_menu.html:19
+#: templates/includes/menus/_psychology_menu.html:19
+#: templates/includes/menus/_student_menu.html:19
+#: templates/includes/menus/_super_admin_menu.html:19
+msgid "Menu"
+msgstr "Меню"
+
+#: templates/includes/menus/_coach_menu.html:84
+#: templates/includes/menus/_psychology_menu.html:84
+#: templates/includes/menus/_super_admin_menu.html:84
+msgid "User Management"
+msgstr "Пользователи"
+
+#: templates/includes/menus/_coach_menu.html:97
+#: templates/includes/menus/_psychology_menu.html:97
+msgid "Users"
+msgstr "Список пользователей"
+
+#: templates/includes/menus/_coach_menu.html:130
+#: templates/includes/menus/_nutrition_menu.html:60
+#: templates/includes/menus/_psychology_menu.html:130
+#: templates/includes/menus/_student_menu.html:130
+#: templates/includes/menus/_super_admin_menu.html:146
+msgid "Support Center"
+msgstr "Центр поддержки"
+
+#: templates/includes/menus/_coach_menu.html:144
+#: templates/includes/menus/_nutrition_menu.html:74
+#: templates/includes/menus/_psychology_menu.html:144
+#: templates/includes/menus/_student_menu.html:144
+#: templates/includes/menus/_super_admin_menu.html:170
+msgid "FAQ"
+msgstr "Часто задаваемые вопросы"
+
+#: templates/includes/menus/_nutrition_menu.html:31
+msgid "Schedule"
+msgstr ""
+
+#: templates/includes/menus/_nutrition_menu.html:44
+msgid "My schedules"
+msgstr ""
+
+#: templates/includes/menus/_student_menu.html:68
+msgid "Files"
+msgstr "Файлы"
+
+#: templates/includes/menus/_super_admin_menu.html:44
+#, fuzzy
+#| msgid "My requests"
+msgid "All requests"
+msgstr "Мои запросы"
+
+#: templates/includes/menus/_super_admin_menu.html:97
+msgid "All users"
+msgstr "Все пользователи"
+
+#: templates/includes/menus/_super_admin_menu.html:110
+#, fuzzy
+#| msgid "List coaches"
+msgid "All coaches"
+msgstr "Список тренеров"
+
+#: templates/includes/menus/_super_admin_menu.html:126
+#, fuzzy
+#| msgid "Student"
+msgid "All students"
+msgstr "Студент"
+
+#: templates/includes/menus/_super_admin_menu.html:160
+#, fuzzy
+#| msgid "Email"
+msgid "Emails"
+msgstr "Eлектронная почта"
+
+#~ msgid "You have successfully registered as a coach."
+#~ msgstr "Вы успешно зарегистрировались как тренер."

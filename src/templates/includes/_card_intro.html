@@ -1,0 +1,168 @@
+{% load i18n %}
+
+<div class="card mb-5 mb-xl-10">
+    <div class="card-body pt-9 pb-0">
+        <div class="d-flex flex-wrap flex-sm-nowrap">
+            {# Avatar #}
+            <div class="me-7 mb-4">
+                <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+                    {% if request.user.avatar %}
+                        <img src="{{ request.user.avatar.url }}"
+                             alt="{{ request.user.get_full_name|default:request.user.email }}"/>
+                    {% else %}
+                        <span class="symbol-label bg-light-{{ request.user.avatar_color_class }} text-{{ request.user.avatar_color_class }} fs-3x fw-bold text-uppercase">
+                            {{ request.user.email|make_list|first }}
+                        </span>
+                    {% endif %}
+                    <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px"></div>
+                </div>
+            </div>
+
+            {# Info #}
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                    <div class="d-flex flex-column">
+                        {# Name #}
+                        <div class="d-flex align-items-center mb-2">
+                            <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">
+                                {% if request.user.first_name or request.user.last_name %}
+                                    {{ request.user.get_full_name }}
+                                {% elif request.user.role == 'Coach' %}
+                                    {% trans 'Coach user' %}
+                                {% else %}
+                                    {% trans 'Student user' %}
+                                {% endif %}
+                            </a>
+                            {% if request.user.is_active %}
+                                <a href="#"><i class="ki-outline ki-verify fs-1 text-primary"></i></a>
+                            {% endif %}
+                        </div>
+                        {# Meta info #}
+                        <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
+                            <a href="#" class="d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2">
+                                <i class="ki-outline ki-profile-circle fs-4 me-1"></i>{{ request.user.role }}
+                            </a>
+                            {% if request.user.country %}
+                                <span class="d-flex align-items-center text-gray-500 me-5 mb-2">
+                                    <i class="ki-outline ki-geolocation fs-4 me-1"></i>
+                                    {% if request.user.country == 'UA' %}{{ request.user.country }}, Ukraine{% endif %}
+                                </span>
+                            {% endif %}
+                            <a href="#" class="d-flex align-items-center text-gray-500 text-hover-primary mb-2">
+                                <i class="ki-outline ki-sms fs-4 me-1"></i>{{ request.user.email }}
+                            </a>
+                        </div>
+                    </div>
+
+                    {# Actions #}
+                    <div class="d-flex my-4">
+                        <a href="#" class="btn btn-sm btn-light me-2" id="kt_user_follow_button">
+                            <i class="ki-outline ki-check fs-3 d-none"></i>
+                            <span class="indicator-label">Follow</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary me-3"
+                           data-bs-toggle="modal" data-bs-target="#kt_modal_offer_a_deal">Hire Me</a>
+                        <div class="me-0">
+                            <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
+                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                <i class="ki-solid ki-dots-horizontal fs-2x"></i>
+                            </button>
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3"
+                                 data-kt-menu="true">
+                                <div class="menu-item px-3">
+                                    <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">Payments</div>
+                                </div>
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3">Create Invoice</a>
+                                </div>
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link flex-stack px-3">Create Payment
+                                        <span class="ms-2" data-bs-toggle="tooltip"
+                                              title="Specify a target name for future usage and reference">
+                                            <i class="ki-outline ki-information fs-6"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3">Generate Bill</a>
+                                </div>
+                                <div class="menu-item px-3" data-kt-menu-trigger="hover"
+                                     data-kt-menu-placement="right-end">
+                                    <a href="#" class="menu-link px-3">
+                                        <span class="menu-title">Subscription</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="menu-sub menu-sub-dropdown w-175px py-4">
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">Plans</a>
+                                        </div>
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">Billing</a>
+                                        </div>
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3">Statements</a>
+                                        </div>
+                                        <div class="separator my-2"></div>
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content px-3">
+                                                <label class="form-check form-switch form-check-custom form-check-solid">
+                                                    <input class="form-check-input w-30px h-20px" type="checkbox"
+                                                           value="1" checked="checked" name="notifications"/>
+                                                    <span class="form-check-label text-muted fs-6">Recurring</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="menu-item px-3 my-1">
+                                    <a href="#" class="menu-link px-3">Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Stats #}
+                <div class="d-flex flex-wrap flex-stack">
+                    <div class="d-flex flex-column flex-grow-1 pe-8">
+                        <div class="d-flex flex-wrap">
+                            {% include "includes/_stat_card.html" with icon="arrow-up" color="success" value="4500" prefix="$" label="Earnings" %}
+                            {% include "includes/_stat_card.html" with icon="arrow-down" color="danger" value="80" prefix="" label="Projects" %}
+                            {% include "includes/_stat_card.html" with icon="arrow-up" color="success" value="60" prefix="%" label="Success Rate" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Navigation tabs #}
+        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+            <li class="nav-item mt-2">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if active_tab == 'overview' %}active{% endif %}"
+                   href="
+                           {% if role == 'coach' %}{% url 'coach_profile' %}{% else %}{% url 'student_profile' %}{% endif %}">
+                    {% trans "Overview" %}
+                </a>
+            </li>
+
+            <li class="nav-item mt-2">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if active_tab == 'settings' %}active{% endif %}"
+                   href="
+                           {% if role == 'coach' %}{% url 'coach_profile_edit' %}{% else %}{% url 'student_profile_edit' %}{% endif %}">
+                    {% trans "Settings" %}
+                </a>
+            </li>
+
+            <li class="nav-item mt-2">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if active_tab == 'security' %}active{% endif %}"
+                   href="
+                           {% if role == 'coach' %}{% url 'coach_profile_security' %}{% else %}{% url 'student_profile_security' %}{% endif %}">
+                    {% trans "Security" %}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

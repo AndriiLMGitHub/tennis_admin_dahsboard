@@ -1,0 +1,352 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Student profile' %}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <!-- Розділювач -->
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">Student profile</li>
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">Settings</li>
+{% endblock %}
+
+{% block main_content %}
+    <!--begin::Navbar-->
+    {% include "includes/_card_intro.html" with active_tab="settings" role="Student" %}
+    <!--end::Navbar-->
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <!--begin::Basic info-->
+        <div class="card mb-5 mb-xl-10">
+            <!--begin::Card header-->
+            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+                 data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                 aria-controls="kt_account_profile_details">
+                <!--begin::Card title-->
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">Profile Details</h3>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--begin::Card header-->
+            <!--begin::Content-->
+            <div id="kt_account_settings_profile_details" class="collapse show">
+                <!--begin::Form-->
+                <form id="kt_account_profile_details_form" method="post" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+
+                    <!-- 🌟 1. ГЛОБАЛЬНІ ПОМИЛКИ (наприклад, помилки чистоти форми, які не стосуються одного поля) -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger d-flex align-items-center p-5 mx-9 mt-9 mb-0">
+                            <i class="ki-outline ki-information-5 fs-2hx text-danger me-4"></i>
+                            <div class="d-flex flex-column">
+                                <h4 class="mb-1 text-danger">Validation Error</h4>
+                                <span>{{ form.non_field_errors.0 }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body border-top p-9">
+
+                        <!-- ========================================== -->
+                        <!-- AVATAR -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6">Avatar</label>
+                            <div class="col-lg-8">
+                                <div class="image-input {% if not form.instance.avatar_url %}image-input-empty{% else %}image-input-outline{% endif %}"
+                                     data-kt-image-input="true"
+                                     style="background-image: url('{% static "assets/media/svg/avatars/blank.svg" %}')">
+
+                                    <div class="image-input-wrapper w-125px h-125px"
+                                            {% if form.instance.avatar_url %}
+                                         style="background-image: url('{{ form.instance.avatar_url }}');"
+                                            {% endif %}>
+                                    </div>
+
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                           data-kt-image-input-action="change"
+                                           data-bs-toggle="tooltip"
+                                           aria-label="Change avatar"
+                                           title="Change avatar">
+                                        <i class="ki-outline ki-pencil fs-7"></i>
+                                        <input type="file" name="avatar" accept="image/jpeg, image/png"/>
+                                        <input type="hidden" name="avatar_remove"/>
+                                    </label>
+
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                          data-kt-image-input-action="cancel"
+                                          data-bs-toggle="tooltip"
+                                          aria-label="Cancel avatar"
+                                          title="Cancel avatar">
+                                        <i class="ki-outline ki-cross fs-2"></i>
+                                    </span>
+
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                          data-kt-image-input-action="remove"
+                                          data-bs-toggle="tooltip"
+                                          aria-label="Remove avatar"
+                                          title="Remove avatar">
+                                        <i class="ki-outline ki-cross fs-2"></i>
+                                    </span>
+                                </div>
+
+                                <div class="form-text">Allowed file types: png, jpg, jpeg. Max 5 MB allowed.</div>
+
+                                {% if form.avatar.errors %}
+                                    <div class="text-danger mt-2 fs-7">{{ form.avatar.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- FULL NAME (First & Last) -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-semibold fs-6">Full Name</label>
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-lg-6 fv-row">
+                                        <!-- 🌟 default_if_none зберігає введене значення при помилці; is-invalid підсвічує поле червоним -->
+                                        <input type="text" name="first_name"
+                                               class="form-control mb-3 mb-lg-0 {% if form.first_name.errors %}is-invalid{% endif %}"
+                                               placeholder="First name"
+                                               value="{{ form.first_name.value|default_if_none:request.user.first_name|default:'' }}"/>
+                                        {% if form.first_name.errors %}
+                                            <div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-lg-6 fv-row">
+                                        <input type="text" name="last_name"
+                                               class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                               placeholder="Last name"
+                                               value="{{ form.last_name.value|default_if_none:request.user.last_name|default:'' }}"/>
+                                        {% if form.last_name.errors %}
+                                            <div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- PHONE NUMBER -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6">
+                                <span>Contact Phone</span>
+                            </label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="tel" name="phone_number"
+                                       class="form-control {% if form.phone_number.errors %}is-invalid{% endif %}"
+                                       placeholder="Phone number"
+                                       value="{{ form.phone_number.value|default_if_none:request.user.phone_number|default:'' }}"/>
+                                {% if form.phone_number.errors %}
+                                    <div class="invalid-feedback">{{ form.phone_number.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- COUNTRY  -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6 required">Country</label>
+                            <div class="col-lg-8 fv-row">
+                                <select name="country" data-control="select2" data-placeholder="Select a country..."
+                                        class="form-select fw-semibold {% if form.country.errors %}is-invalid{% endif %}">
+                                    <option value="">Select a country...</option>
+
+                                    {% for country in countries %}
+                                        <option data-kt-flag="{% static 'assets/media/flags/' %}{{ country.flag }}"
+                                                value="{{ country.code }}"
+                                                {% if form.country.value == country.code %}selected{% endif %}>
+                                            {{ country.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.country.errors %}
+                                    <div class="invalid-feedback">{{ form.country.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- LANGUAGE (Select2) -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6 required">Language</label>
+                            <div class="col-lg-8 fv-row">
+                                <select name="language" data-control="select2" data-placeholder="Select a language..."
+                                        class="form-select fw-semibold {% if form.language.errors %}is-invalid{% endif %}">
+                                    <option value="">Select a language...</option>
+
+                                    {% for lang in languages %}
+                                        <option data-kt-flag="{% static 'assets/media/flags/' %}{{ lang.flag }}"
+                                                value="{{ lang.code }}"
+                                                {% if form.language.value == lang.code %}selected{% endif %}>
+                                            {{ lang.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.language.errors %}
+                                    <div class="invalid-feedback">{{ form.language.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- TIMEZONE (Select2) -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-semibold fs-6">Time Zone</label>
+                            <div class="col-lg-8 fv-row">
+                                <select name="timezone" data-control="select2" data-placeholder="Select a timezone.."
+                                        class="form-select fw-semibold {% if form.timezone.errors %}is-invalid{% endif %}">
+                                    <option value="">Select a Timezone..</option>
+
+                                    {% for tz in timezones %}
+                                        <option data-bs-offset="{{ tz.offset }}"
+                                                value="{{ tz.value }}"
+                                                {% if form.timezone.value == tz.value %}selected{% endif %}>
+                                            {{ tz.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.timezone.errors %}
+                                    <div class="invalid-feedback">{{ form.timezone.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- ========================================== -->
+                        <!-- CURRENCY (Select2) -->
+                        <!-- ========================================== -->
+                        <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6">Currency</label>
+                            <div class="col-lg-8 fv-row">
+                                <select name="currency" data-control="select2" data-placeholder="Select a currency..."
+                                        class="form-select fw-semibold {% if form.currency.errors %}is-invalid{% endif %}">
+                                    <option value="">Select a currency...</option>
+
+                                    {% for cur in currencies %}
+                                        <option data-kt-flag="{% static 'assets/media/flags/' %}{{ cur.flag }}"
+                                                value="{{ cur.code }}"
+                                                {% if form.currency.value == cur.code %}selected{% endif %}>
+                                            {{ cur.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.currency.errors %}
+                                    <div class="invalid-feedback">{{ form.currency.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Basic info-->
+    </div>
+    <!--begin::Content-->
+{% endblock main_content %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. АНАЛІТИКА: Створюємо словник (масив об'єктів) з усіма полями.
+            // Це єдина точка конфігурації. Треба додати поле - додаєш один рядок сюди.
+            const selectFields = [
+                {name: 'country', value: '{{ request.user.country|default:"" }}'},
+                {name: 'language', value: '{{ request.user.language|default:"" }}'},
+                {name: 'currency', value: '{{ request.user.currency|default:"" }}'}
+            ];
+
+            // 2. Проходимо циклом по кожному полю
+            selectFields.forEach(function (field) {
+                if (field.value) {
+                    const selectElement = $('select[name="' + field.name + '"]');
+
+                    // 3. Якщо елемент знайдено на сторінці - оновлюємо його
+                    if (selectElement.length) {
+                        selectElement.val(field.value).trigger('change');
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Збираємо дані. Пріоритет: дані з POST-запиту форми -> дані користувача з БД -> порожньо.
+            const selections = {
+                'country': "{{ form.country.value|default_if_none:request.user.country|default:''|escapejs }}",
+                'language': "{{ form.language.value|default_if_none:request.user.language|default:''|escapejs }}",
+                'timezone': "{{ form.timezone.value|default_if_none:request.user.timezone|default:''|escapejs }}",
+                'currency': "{{ form.currency.value|default_if_none:request.user.currency|default:''|escapejs }}"
+            };
+
+            // 2. Ініціалізуємо і підставляємо значення у Select2 (jQuery вимагається шаблоном Metronic)
+            Object.keys(selections).forEach(function (fieldName) {
+                const val = selections[fieldName];
+                if (val) {
+                    const selectEl = document.querySelector(`select[name="${fieldName}"]`);
+                    if (selectEl) {
+                        $(selectEl).val(val).trigger('change');
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Функція для форматування елементів Select2 з прапорцями (стандарт Metronic)
+            function formatFlag(option) {
+                if (!option.id) {
+                    return option.text;
+                }
+
+                // Отримуємо значення data-kt-flag з опції HTML
+                var flagUrl = $(option.element).data('kt-flag');
+                if (!flagUrl) {
+                    return option.text;
+                }
+
+                // Створюємо HTML-структуру з картинкою прапорця та назвою
+                var $option = $(
+                    '<span><img src="' + flagUrl + '" class="rounded-circle h-20px me-2" style="width: 20px; height: 15px; object-fit: cover;" /><span></span></span>'
+                );
+
+                $option.find("span").text(option.text);
+                return $option;
+            }
+
+            // Ініціалізуємо всі селекти з прапорцями (Країни, Мови, Валюти)
+            $('select[name="country"], select[name="language"], select[name="currency"]').each(function () {
+                // Якщо Select2 вже був ініціалізований — знищуємо перед повторною ініціалізацією
+                if ($(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2('destroy');
+                }
+
+                $(this).select2({
+                    placeholder: $(this).data('placeholder') || "Select an option...",
+                    templateSelection: formatFlag,
+                    templateResult: formatFlag
+                });
+            });
+        });
+    </script>
+{% endblock scripts %}

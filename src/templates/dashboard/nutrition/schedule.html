@@ -1,0 +1,358 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Nutrition Dashboard" %}{% endblock %}
+
+{% block extra_styles %}
+    <link href="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.css' %}" rel="stylesheet"
+          type="text/css"/>
+    <style>
+        .fc-daygrid-day-events,
+        .fc-event,
+        .fc-daygrid-event,
+        .fc-daygrid-event-harness {
+            cursor: pointer !important;
+        }
+
+        /* Захист: скасовуємо курсор виділення тексту для всіх внутрішніх елементів події */
+        .fc-event *,
+        .fc-daygrid-day-events * {
+            cursor: pointer !important;
+            user-select: none; /* Додатково забороняє виділення тексту при кліці */
+        }
+    </style>
+{% endblock extra_styles %}
+
+{% block main_content %}
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title fw-bold">{% trans "Nutrition Calendar" %}</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Контейнер сітки календаря -->
+                        <!-- Замість простого div додаємо data-атрибут з фіктивним ID (наприклад, 999999) -->
+                        <div id="kt_calendar_app" data-mark-url="{% url 'mark_request_viewed' 99999999 %}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 МОДАЛЬНЕ ВІКНО ПЕРЕГЛЯДУ ЗАПИТУ (METRONIC STYLE) -->
+    <div class="modal fade" id="kt_modal_view_event" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered mw-700px">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header border-0 pb-0 justify-content-between">
+                    <h3 class="fw-bold m-0" id="modal_client_name">{% trans "Consultation Details" %}</h3>
+
+                    <!-- Кнопка закриття (хрестик) -->
+                    <div>
+                        <button type="button" class="btn btn-icon ..." data-bs-dismiss="modal"
+                                aria-label="{% trans 'Close' %}">
+                            <i class="ki-outline ki-cross fs-1"></i>
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body py-5 px-lg-10">
+
+                    <!-- 1. Основна інформація та контакти -->
+                    <div class="d-flex flex-wrap align-items-center bg-light-primary rounded p-5 mb-7">
+                        <div class="flex-grow-1 me-3">
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "Client Contacts" %}</span>
+                            <div class="fs-6 fw-bold text-gray-800" id="modal_whatsapp"></div>
+                        </div>
+                        <div class="me-3">
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "Params (Age / W / H)" %}</span>
+                            <div class="fs-6 fw-bold text-gray-800" id="modal_physical_params"></div>
+                        </div>
+                        <div>
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "Language" %}</span>
+                            <span class="badge badge-light-info fw-bold" id="modal_language"></span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Розклад та дати -->
+                    <div class="row g-5 mb-7">
+                        <div class="col-md-12">
+                            <div class="border border-gray-300 border-dashed rounded p-4 text-center">
+                                <span class="fs-7 text-muted fw-semibold d-block">{% trans "Appointment Date" %}</span>
+                                <span class="fs-6 fw-bold text-primary" id="modal_appointment_date"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Скарги та анамнез -->
+                    <div class="mb-5">
+                        <h5 class="fw-bold text-gray-800 mb-2">
+                            <i class="ki-outline ki-message-text-2 text-primary fs-3 me-1"></i>{% trans "Complaints" %}
+                        </h5>
+                        <div class="fs-6 text-gray-700 bg-light rounded p-4 border" id="modal_complaints"></div>
+                    </div>
+
+                    <div class="row g-5 mb-5">
+                        <div class="col-md-6">
+                            <span class="fw-bold text-gray-800 d-block mb-1">{% trans "Chronic Diseases" %}:</span>
+                            <span class="text-gray-600 fs-7" id="modal_chronic"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="fw-bold text-gray-800 d-block mb-1">{% trans "Medications & Vitamins" %}:</span>
+                            <span class="text-gray-600 fs-7" id="modal_medications"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="fw-bold text-gray-800 d-block mb-1">{% trans "Allergies" %}:</span>
+                            <span class="text-gray-600 fs-7" id="modal_allergies"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="fw-bold text-gray-800 d-block mb-1">{% trans "Operations & Traumas" %}:</span>
+                            <span class="text-gray-600 fs-7" id="modal_operations"></span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Прикріплений файл -->
+                    <div class="separator separator-dashed my-5"></div>
+
+                    <div id="modal_file_container"
+                         class="d-flex align-items-center justify-content-between bg-light-warning rounded p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="ki-outline ki-file fs-2x text-warning me-3"></i>
+                            <div>
+                                <span class="fw-bold text-gray-800 fs-6 d-block" id="modal_file_name"></span>
+                                <span class="text-muted fs-7">{% trans "Attached diagnostic / analysis paper" %}</span>
+                            </div>
+                        </div>
+                        <a href="#" id="modal_file_link" target="_blank" class="btn btn-sm btn-warning fw-bold">
+                            <i class="ki-outline ki-file-down fs-4 me-1"></i>{% trans "Download" %}
+
+                        </a>
+                    </div>
+
+                    <div id="modal_no_file" class="text-muted fs-7 italic text-center py-2" style="display: none;">
+                        {% trans "No attachment files uploaded for this intake." %}
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer flex-center border-0 pt-3">
+                    <button type="button" class="btn btn-light me-3 px-8" data-bs-dismiss="modal">
+                        {% trans "Close" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Safe JSON from Django -->
+    {{ events_data|json_script:"calendar-events-data" }}
+{% endblock main_content %}
+
+{% block scripts %}
+    {#  After unbudle  #}
+    <script src="{% static 'assets/plugins/custom/fullcalendar/calendar.js' %}"></script>
+    {#  Original  #}
+    {# <script src="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.js' %}"></script>#}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ==========================================
+            // 1. ХЕЛПЕРИ ТА УТИЛІТИ
+            // ==========================================
+            const Utils = {
+                /**
+                 * Отримує CSRF-токен з форм або Cookie.
+                 */
+                getCsrfToken() {
+                    return (
+                        document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                        document.cookie.match(/csrftoken=([\w-]+)/)?.[1] ||
+                        ''
+                    );
+                },
+
+                /**
+                 * Безпечно встановлює текстовий вміст для елемента (захист від null).
+                 */
+                setText(element, text) {
+                    if (element) {
+                        element.textContent = text ?? '';
+                    }
+                }
+            };
+
+            // ==========================================
+            // 2. СЕРВІС МЕРЕЖЕВИХ ЗАПИТІВ (API LAYER)
+            // ==========================================
+            const ScheduleAPI = {
+                async markAsViewed(requestId) {
+                    const calendarEl = document.getElementById("kt_calendar_app");
+                    if (!calendarEl || !calendarEl.dataset.markUrl) {
+                        throw new Error("Missing data-mark-url attribute on calendar container.");
+                    }
+
+                    // Динамічно замінюємо фіктивний ID 999999 на реальний requestId
+                    const url = calendarEl.dataset.markUrl.replace('99999999', requestId);
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': Utils.getCsrfToken(),
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Server returned status ${response.status}`);
+                    }
+                    return await response.json();
+                }
+            };
+
+            // ==========================================
+            // 3. МЕНЕДЖЕР МОДАЛЬНОГО ВІКНА (UI LAYER)
+            // ==========================================
+            class EventModalManager {
+                constructor(modalId) {
+                    this.modalEl = document.getElementById(modalId);
+                    if (!this.modalEl) return;
+
+                    this.bsModal = new bootstrap.Modal(this.modalEl);
+
+                    // 🌟 КЕШУВАННЯ DOM-ЕЛЕМЕНТІВ (Виконується лише 1 раз при завантаженні сторінки)
+                    this.elements = {
+                        clientName: document.getElementById('modal_client_name'),
+                        whatsapp: document.getElementById('modal_whatsapp'),
+                        physicalParams: document.getElementById('modal_physical_params'),
+                        language: document.getElementById('modal_language'),
+                        appointmentDate: document.getElementById('modal_appointment_date'),
+                        startDate: document.getElementById('modal_start_date'),
+                        endDate: document.getElementById('modal_end_date'),
+                        complaints: document.getElementById('modal_complaints'),
+                        chronic: document.getElementById('modal_chronic'),
+                        medications: document.getElementById('modal_medications'),
+                        allergies: document.getElementById('modal_allergies'),
+                        operations: document.getElementById('modal_operations'),
+                        fileContainer: document.getElementById('modal_file_container'),
+                        noFileBlock: document.getElementById('modal_no_file'),
+                        fileName: document.getElementById('modal_file_name'),
+                        fileLink: document.getElementById('modal_file_link'),
+                    };
+                }
+
+                /**
+                 * Заповнює модальне вікно даними з об'єкта extendedProps.
+                 */
+                populate(props, fallbackTitle = '') {
+                    if (!this.modalEl) return;
+
+                    // Основні дані
+                    Utils.setText(this.elements.clientName, props.full_name || fallbackTitle);
+                    Utils.setText(this.elements.whatsapp, props.whatsapp_number);
+                    Utils.setText(this.elements.physicalParams, `${props.age} y.o. / ${props.weight} / ${props.height}`);
+                    Utils.setText(this.elements.language, props.language);
+
+                    // Дати
+                    Utils.setText(this.elements.appointmentDate, props.appointment_date);
+                    Utils.setText(this.elements.startDate, props.start_date);
+                    Utils.setText(this.elements.endDate, props.end_date);
+
+                    // Анамнез
+                    Utils.setText(this.elements.complaints, props.complaints);
+                    Utils.setText(this.elements.chronic, props.chronic_diseases);
+                    Utils.setText(this.elements.medications, props.medications);
+                    Utils.setText(this.elements.allergies, props.allergies);
+                    Utils.setText(this.elements.operations, `${props.operations} (Traumas: ${props.traumas})`);
+
+                    // Файл
+                    this._renderFileSection(props.file_url, props.file_name);
+                }
+
+                _renderFileSection(fileUrl, fileName) {
+                    if (!this.elements.fileContainer || !this.elements.noFileBlock) return;
+
+                    if (fileUrl) {
+                        this.elements.fileContainer.style.display = 'flex';
+                        this.elements.noFileBlock.style.display = 'none';
+                        Utils.setText(this.elements.fileName, fileName);
+                        if (this.elements.fileLink) {
+                            this.elements.fileLink.setAttribute('href', fileUrl);
+                        }
+                    } else {
+                        this.elements.fileContainer.style.display = 'none';
+                        this.elements.noFileBlock.style.display = 'block';
+                    }
+                }
+
+                show() {
+                    this.bsModal?.show();
+                }
+            }
+
+            // ==========================================
+            // 4. ІНІЦІАЛІЗАЦІЯ ТА КОНТРОЛЕР КАЛЕНДАРЯ
+            // ==========================================
+            const calendarEl = document.getElementById("kt_calendar_app");
+            if (!calendarEl) return;
+
+            // Ініціалізуємо менеджер модалки
+            const modalManager = new EventModalManager('kt_modal_view_event');
+
+            // Безпечний парсинг JSON з Django
+            const eventsContainer = document.getElementById("calendar-events-data");
+            let initialEvents = [];
+            if (eventsContainer?.textContent) {
+                try {
+                    initialEvents = JSON.parse(eventsContainer.textContent);
+                } catch (error) {
+                    console.error("Failed to parse calendar events JSON:", error);
+                }
+            }
+
+            // Налаштування FullCalendar
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: "{{ LANGUAGE_CODE|default:'en' }}",
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,timeGridDay"
+                },
+                navLinks: true,
+                selectable: true,
+                editable: false,
+                dayMaxEvents: true,
+                events: initialEvents,
+
+                // 🌟 КЛІК НА ПОДІЮ: Async/Await обробник
+                eventClick: async function (info) {
+                    const props = info.event.extendedProps;
+                    const requestId = info.event.id;
+
+                    // 1. Позначаємо як переглянутий на сервері, якщо ще не переглянуто
+                    if (!props.is_viewed) {
+                        try {
+                            const response = await ScheduleAPI.markAsViewed(requestId);
+                            if (response.status === 'success' && response.was_updated) {
+                                props.is_viewed = true; // Оновлюємо локальний стан
+                            }
+                        } catch (error) {
+                            console.error('Error marking request as viewed:', error);
+                        }
+                    }
+
+                    // 2. Наповнюємо модальне вікно та відкриваємо його
+                    modalManager.populate(props, info.event.title);
+                    modalManager.show();
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock scripts %}

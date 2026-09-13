@@ -1,0 +1,6 @@
+Привіт, {{ user.first_name }}!
+
+Підтвердь реєстрацію, відкривши посилання:
+{{ protocol }}://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
+
+Якщо це не ти — просто ігноруй лист.

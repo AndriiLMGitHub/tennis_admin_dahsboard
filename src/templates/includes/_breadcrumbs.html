@@ -1,0 +1,30 @@
+<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7">
+    <!--begin::Home Item (Завжди веде на головну/дашборд)-->
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        <!-- Заміни 'dashboard' на ім'я свого головного URL -->
+        <a href="{% url 'index' %}" class="text-hover-primary">
+            <i class="ki-outline ki-home text-gray-700 fs-6"></i>
+        </a>
+    </li>
+    <!--end::Home Item-->
+
+    <!--begin::Dynamic Items-->
+    {% for crumb in breadcrumbs %}
+        <!-- Розділювач (стрілочка) -->
+        <li class="breadcrumb-item">
+            <i class="ki-outline ki-right fs-7 text-gray-700"></i>
+        </li>
+
+        <!-- Перевіряємо, чи є у цієї крихти URL -->
+        {% if crumb.url %}
+            <!-- Це проміжна сторінка -->
+            <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+                <a href="{{ crumb.url }}" class="text-hover-primary">{{ crumb.name }}</a>
+            </li>
+        {% else %}
+            <!-- Це поточна сторінка -->
+            <li class="breadcrumb-item text-gray-500 mx-n1">{{ crumb.name }}</li>
+        {% endif %}
+    {% endfor %}
+    <!--end::Dynamic Items-->
+</ul>

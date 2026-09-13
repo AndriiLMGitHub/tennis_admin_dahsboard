@@ -1,0 +1,7 @@
+New Contact Request Received.
+
+Name: {{ feedback.name }}
+Email: {{ feedback.email }}
+
+Message:
+{{ feedback.message }}

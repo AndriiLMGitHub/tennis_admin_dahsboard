@@ -1,0 +1,244 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Psychology Schedule" %}{% endblock %}
+
+{% block extra_styles %}
+    <link href="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.css' %}" rel="stylesheet" type="text/css"/>
+    <style>
+        .fc-daygrid-day-events, .fc-event, .fc-daygrid-event, .fc-daygrid-event-harness {
+            cursor: pointer !important;
+        }
+        .fc-event *, .fc-daygrid-day-events * {
+            cursor: pointer !important;
+            user-select: none;
+        }
+    </style>
+{% endblock extra_styles %}
+
+{% block main_content %}
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title fw-bold">{% trans "Psychology Consultation Calendar" %}</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Зміни URL на свій актуальний name у urls.py -->
+                        <div id="kt_calendar_app" data-mark-url="{% url 'mark_request_viewed' 99999999 %}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 МОДАЛЬНЕ ВІКНО ПЕРЕГЛЯДУ ЗАПИТУ -->
+    <div class="modal fade" id="kt_modal_view_event" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered mw-700px">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header border-0 pb-0 justify-content-between">
+                    <h3 class="fw-bold m-0" id="modal_client_name">{% trans "Client Details" %}</h3>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}">
+                        <i class="ki-outline ki-cross fs-1"></i>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body py-5 px-lg-10">
+
+                    <!-- 🚨 АЛЕРТ СТАНУ КРИЗИ (Прихований за замовчуванням) -->
+                    <div id="modal_crisis_alert" class="alert alert-danger d-flex align-items-center p-5 mb-7" style="display: none !important;">
+                        <i class="ki-outline ki-shield-cross fs-2hx text-danger me-4"></i>
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-danger">{% trans "Urgent Attention Required" %}</h4>
+                            <span>{% trans "The client has indicated they are in a crisis state." %}</span>
+                        </div>
+                    </div>
+
+                    <!-- 1. Основна інформація та контакти -->
+                    <div class="d-flex flex-wrap align-items-center bg-light-primary rounded p-5 mb-7">
+                        <div class="flex-grow-1 me-3">
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "WhatsApp / Telegram" %}</span>
+                            <div class="fs-6 fw-bold text-gray-900" id="modal_whatsapp"></div>
+                        </div>
+                        <div class="me-3">
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "Appointment Date" %}</span>
+                            <div class="fs-6 fw-bold text-primary" id="modal_appointment_date"></div>
+                        </div>
+                        <div>
+                            <span class="text-muted fw-semibold d-block fs-7">{% trans "Previous Therapy" %}</span>
+                            <span class="badge fw-bold" id="modal_previous_therapy"></span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Скарги та анамнез -->
+                    <div class="mb-7">
+                        <h5 class="fw-bold text-gray-800 mb-2">
+                            <i class="ki-outline ki-message-text-2 text-primary fs-3 me-1"></i>{% trans "Primary Concern" %}
+                        </h5>
+                        <div class="fs-6 text-gray-800 bg-light rounded p-4 border" id="modal_primary_concern"></div>
+                    </div>
+
+                    <div>
+                        <h5 class="fw-bold text-gray-800 mb-2">
+                            <i class="ki-outline ki-pill text-primary fs-3 me-1"></i>{% trans "Psychiatric Medications" %}
+                        </h5>
+                        <div class="fs-6 text-gray-800 bg-light rounded p-4 border" id="modal_psychiatric_medications"></div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer flex-center border-0 pt-3">
+                    <button type="button" class="btn btn-light me-3 px-8" data-bs-dismiss="modal">
+                        {% trans "Close" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSON Data -->
+    {{ events_data|json_script:"calendar-events-data" }}
+{% endblock main_content %}
+
+{% block scripts %}
+    <script src="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const Utils = {
+                getCsrfToken() {
+                    return (
+                        document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                        document.cookie.match(/csrftoken=([\w-]+)/)?.[1] ||
+                        ''
+                    );
+                },
+                setText(element, text) {
+                    if (element) element.textContent = text ?? '';
+                }
+            };
+
+            const ScheduleAPI = {
+                async markAsViewed(requestId) {
+                    const calendarEl = document.getElementById("kt_calendar_app");
+                    if (!calendarEl || !calendarEl.dataset.markUrl) throw new Error("Missing data-mark-url");
+
+                    if (requestId === 0) return; // Запобіжник, якщо Request не прив'язаний
+
+                    const url = calendarEl.dataset.markUrl.replace('99999999', requestId);
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': Utils.getCsrfToken(),
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+                    return await response.json();
+                }
+            };
+
+            class EventModalManager {
+                constructor(modalId) {
+                    this.modalEl = document.getElementById(modalId);
+                    if (!this.modalEl) return;
+                    this.bsModal = new bootstrap.Modal(this.modalEl);
+
+                    // Кешуємо тільки існуючі елементи DOM
+                    this.elements = {
+                        clientName: document.getElementById('modal_client_name'),
+                        whatsapp: document.getElementById('modal_whatsapp'),
+                        appointmentDate: document.getElementById('modal_appointment_date'),
+                        primaryConcern: document.getElementById('modal_primary_concern'),
+                        psychiatricMeds: document.getElementById('modal_psychiatric_medications'),
+                        previousTherapy: document.getElementById('modal_previous_therapy'),
+                        crisisAlert: document.getElementById('modal_crisis_alert'),
+                    };
+                }
+
+                populate(props, title = '') {
+                    if (!this.modalEl) return;
+
+                    Utils.setText(this.elements.clientName, props.full_name || title);
+                    Utils.setText(this.elements.whatsapp, props.whatsapp_number);
+                    Utils.setText(this.elements.appointmentDate, props.appointment_date);
+                    Utils.setText(this.elements.primaryConcern, props.primary_concern);
+                    Utils.setText(this.elements.psychiatricMeds, props.psychiatric_medications);
+
+                    // Логіка для "Попередньої терапії"
+                    if (props.previous_therapy) {
+                        this.elements.previousTherapy.textContent = "{% trans 'Yes' %}";
+                        this.elements.previousTherapy.className = "badge badge-light-success fw-bold";
+                    } else {
+                        this.elements.previousTherapy.textContent = "{% trans 'No' %}";
+                        this.elements.previousTherapy.className = "badge badge-light-secondary fw-bold text-muted";
+                    }
+
+                    // Логіка для "Стану кризи"
+                    if (props.crisis_state) {
+                        this.elements.crisisAlert.style.setProperty('display', 'flex', 'important');
+                    } else {
+                        this.elements.crisisAlert.style.setProperty('display', 'none', 'important');
+                    }
+                }
+
+                show() {
+                    this.bsModal?.show();
+                }
+            }
+
+            const calendarEl = document.getElementById("kt_calendar_app");
+            if (!calendarEl) return;
+
+            const modalManager = new EventModalManager('kt_modal_view_event');
+
+            const eventsContainer = document.getElementById("calendar-events-data");
+            let initialEvents = [];
+            if (eventsContainer?.textContent) {
+                try {
+                    initialEvents = JSON.parse(eventsContainer.textContent);
+                } catch (e) {
+                    console.error("JSON parse error", e);
+                }
+            }
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: "{{ LANGUAGE_CODE|default:'en' }}",
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,timeGridDay"
+                },
+                navLinks: true,
+                selectable: true,
+                editable: false,
+                dayMaxEvents: true,
+                events: initialEvents,
+                eventClick: async function (info) {
+                    const props = info.event.extendedProps;
+                    const requestId = parseInt(info.event.id, 10);
+
+                    if (!props.is_viewed && requestId > 0) {
+                        try {
+                            const res = await ScheduleAPI.markAsViewed(requestId);
+                            if (res.status === 'success') props.is_viewed = true;
+                        } catch (e) {
+                            console.error('Mark as viewed failed:', e);
+                        }
+                    }
+
+                    modalManager.populate(props, info.event.title);
+                    modalManager.show();
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock scripts %}

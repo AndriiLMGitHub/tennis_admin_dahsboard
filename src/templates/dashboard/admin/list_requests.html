@@ -1,0 +1,252 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Create request' %}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <!-- Розділювач -->
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+
+    <!-- Поточна сторінка (Номер заявки) - Сіра і не клікабельна -->
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans 'List requests' %}</li>
+{% endblock %}
+
+{% block main_content %}
+    <h1 class="mb-8">{% trans 'List requests' %}</h1>
+    <!--begin::Table-->
+    <div class="card card-flush mt-6 mt-xl-9">
+        <!--begin::Card header-->
+        <div class="card-header mt-5">
+            <!--begin::Card title-->
+            <div class="card-title flex-column">
+                <h3 class="fw-bold mb-1">{% trans 'Active requests' %}</h3>
+                <div class="fs-6 text-gray-500">
+                    {% trans 'Total requests:' %} {{ total_requests_count }}
+                </div>
+            </div>
+            <!--begin::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar my-1">
+                <!--begin::Select-->
+                <form method="GET" id="filter-form" class="d-flex align-items-center">
+                    <div class="me-6 my-1">
+                        <select name="period" data-control="select2" data-hide-search="true"
+                                class="w-150px form-select form-select-solid form-select-sm"
+                                onchange="this.form.submit()">
+                            <option value="all"
+                                    {% if request.GET.period == 'all' or not request.GET.period %}selected{% endif %}>
+                                {% trans "All time" %}
+                            </option>
+                            <option value="this_month"
+                                    {% if request.GET.period == 'this_month' %}selected{% endif %}>
+                                {% trans "This month" %}
+                            </option>
+                            <option value="last_90_days"
+                                    {% if request.GET.period == 'last_90_days' %}selected{% endif %}>
+                                {% trans "Last 90 days" %}
+                            </option>
+                            <option value="this_year"
+                                    {% if request.GET.period == 'this_year' %}selected{% endif %}>
+                                {% trans "This year" %}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="me-4 my-1">
+                        <select name="status" data-control="select2" data-hide-search="true"
+                                class="w-150px form-select form-select-solid form-select-sm"
+                                onchange="this.form.submit()">
+                            <option value="all"
+                                    {% if request.GET.status == 'all' or not request.GET.status %}selected{% endif %}>
+                                {% trans "All Statuses" %}
+                            </option>
+                            <option value="new"
+                                    {% if request.GET.status == 'new' %}selected{% endif %}>
+                                {% trans "New" %}
+                            </option>
+                            <option value="assigned"
+                                    {% if request.GET.status == 'assigned' %}selected{% endif %}>
+                                {% trans "Assigned" %}
+                            </option>
+                            <option value="in_progress"
+                                    {% if request.GET.status == 'in_progress' %}selected{% endif %}>
+                                {% trans "In Progress" %}
+                            </option>
+                            <option value="completed"
+                                    {% if request.GET.status == 'completed' %}selected{% endif %}>
+                                {% trans "Completed" %}
+                            </option>
+                            <option value="rejected"
+                                    {% if request.GET.status == 'rejected' %}selected{% endif %}>
+                                {% trans "Rejected" %}
+                            </option>
+                        </select>
+                    </div>
+                    {% if request.GET.period or request.GET.status %}
+                        <a href="?" class="btn btn-sm btn-light-danger mx-2 my-1 ">{% trans "Reset" %}</a>
+                    {% endif %}
+
+                    <!--begin::Search-->
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <i class="ki-outline ki-magnifier fs-3 position-absolute ms-3"></i>
+                        <input type="text" name="search" value="{{ request.GET.search }}"
+                               class="form-control form-control-solid form-control-sm w-200px ps-9"
+                               placeholder="{% trans 'Search requests...' %}"/>
+                    </div>
+                    <!--end::Search-->
+                </form>
+                <!--end::Select-->
+            </div>
+            <!--begin::Card toolbar-->
+        </div>
+        <!--end::Card header-->
+        <!--begin::Card body-->
+        <div class="card-body pt-0">
+            <!--begin::Table container-->
+            <div class="table-responsive">
+                <!--begin::Table-->
+                <table id="kt_profile_overview_table"
+                       class="table table-row-bordered table-row-dashed gy-4 align-middle fw-bold">
+                    <thead class="fs-7 text-gray-500 text-uppercase border-bottom border-gray-200">
+                    <tr>
+                        <th class="min-w-200px">{% trans "Client" %}</th>
+                        <th class="min-w-250px">{% trans "Assigned Specialist" %}</th>
+                        <th class="min-w-150px">{% trans "Service Details" %}</th>
+                        <th class="min-w-150px">{% trans "Status" %}</th>
+                        <th class="min-w-50px text-end">{% trans "Actions" %}</th>
+                    </tr>
+                    </thead>
+                    <tbody class="fs-6">
+                    {% for request_item in all_requests %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-circle symbol-50px me-3">
+                                        {% if request_item.user.avatar %}
+                                            <img src="{{ request_item.user.avatar.url }}"
+                                                 alt="{% trans 'Client Avatar' %}"/>
+                                        {% else %}
+                                            <div class="symbol-label fs-3 bg-light-primary text-primary fw-bolder">
+                                                {{ request_item.user.email|slice:":1"|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="text-gray-800 fw-bold text-hover-primary fs-6 me-2">
+                                                {{ request_item.user.get_full_name|default:request_item.user.email }}
+                                            </span>
+                                                <span class="badge badge-light-primary fs-9 px-2 py-1 text-nowrap">
+                                                {% trans "Client" %}
+                                            </span>
+                                        </div>
+
+                                        <a href="mailto:{{ request_item.user.email }}"
+                                           class="text-muted fw-semibold text-hover-primary fs-7 d-block">
+                                            {{ request_item.user.email }}
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                {% if request_item.assigned_specialist %}
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-35px symbol-circle me-3">
+                                            {% if request_item.assigned_specialist.avatar %}
+                                                <img alt="{{ request_item.assigned_specialist.get_full_name }}"
+                                                     src="{{ request_item.assigned_specialist.avatar.url }}"/>
+                                            {% else %}
+                                                <span class="symbol-label bg-light-primary text-primary fw-bold text-uppercase">
+                                                    {{ request_item.assigned_specialist.email|make_list|first }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">
+                                                {{ request_item.assigned_specialist.get_full_name|default:'Unknown Coach' }}
+                                            </a>
+                                            <div class="fw-semibold text-gray-500 fs-7">{{ request_item.get_specialty_needed_display }}</div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex flex-column">
+                                        <span class="badge badge-light-warning w-auto align-self-start">{% trans "Not Assigned" %}</span>
+                                        <span class="text-muted fw-semibold fs-7 mt-1">{{ request_item.get_specialty_needed_display }}</span>
+                                    </div>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="text-gray-800 fw-bold">{{ request_item.service.name }}</div>
+                                <div class="text-gray-500 fw-semibold fs-7">
+                                    {{ request_item.created_at|date:"M j, Y" }}
+                                    {% if request_item.deadline %}
+                                        <br>
+                                        <span class="text-danger">{% trans "Due" %}: {{ request_item.deadline|date:"M j, Y" }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="d-flex flex-column w-100 me-2">
+                                    <div class="d-flex flex-stack mb-2">
+                                        <span class="badge badge-light-{{ request_item.status_color_class }} fw-bold px-3 py-2">
+                                            {{ request_item.get_status_display }}
+                                        </span>
+                                    </div>
+                                    <div class="progress h-6px w-100">
+                                        <div class="progress-bar bg-{{ request_item.status_color_class }}"
+                                             role="progressbar"
+                                             style="width: {{ request_item.progress_percentage }}%"
+                                             aria-valuenow="{{ request_item.progress_percentage }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="text-end">
+                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm text-nowrap">
+                                    {% trans "View" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted fw-semibold py-10">
+                                {% trans "No requests found." %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!--end::Table-->
+            </div>
+            <!--end::Table container-->
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
+{% endblock main_content %}
+
+{% block scripts %}
+    <!--begin::Vendors Javascript(used for this page only)-->
+    <script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+    <!--end::Vendors Javascript-->
+    <!--begin::Custom Javascript(used for this page only)-->
+    <script src="{% static 'assets/js/custom/apps/projects/project/project.js' %}"></script>
+    <!--end::Custom Javascript(used for this page only)-->
+    <script>
+        $(document).ready(function () {
+            $('#filter-form select').on('select2:select', function (e) {
+                $('#filter-form').submit();
+            });
+        });
+    </script>
+{% endblock scripts %}

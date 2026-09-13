@@ -1,0 +1,21 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Nutrition Dashboard" %}{% endblock %}
+
+{% block extra_styles %}
+    <link href="{% static 'assets/plugins/custom/fullcalendar/fullcalendar.bundle.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock extra_styles %}
+
+{% block main_content %}
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+                <h1>Dashboard nutrions</h1>
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
+
+{% block scripts %}
+{% endblock scripts %}

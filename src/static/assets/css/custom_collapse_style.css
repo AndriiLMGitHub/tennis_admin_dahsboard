@@ -1,0 +1,21 @@
+.custom-psychology-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease-in-out;
+}
+
+.custom-psychology-collapse.is-open {
+    grid-template-rows: 1fr;
+}
+
+.custom-psychology-collapse-inner {
+    overflow: hidden;
+}
+
+.custom-psychology-icon {
+    transition: transform 0.3s ease;
+}
+
+.custom-psychology-wrapper.is-open .custom-psychology-icon {
+    transform: rotate(180deg);
+}

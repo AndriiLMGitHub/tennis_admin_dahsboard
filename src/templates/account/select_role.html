@@ -1,0 +1,49 @@
+{% extends 'account/base_auth.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}Select Role Please{% endblock title %}
+
+{% block auth_main %}
+    <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
+        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
+            <div class="mb-13 text-center">
+                <a href="#" class="">
+                    <img alt="Logo" src="{% static 'assets/media/logos/custom-2.svg' %}" class="h-40px">
+                </a>
+            </div>
+            <h2 class="fw-bolder text-gray-900 mb-7">Select your role!</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="fv-row mb-8">
+                    <!--begin::Role-->
+                    <select
+                            name="{{ form.role.name }}"
+                            class="form-select bg-transparent {% if form.role.errors %}is-invalid{% endif %}"
+                    >
+                        {% for value, label in form.role.field.choices %}
+                            <option value="{{ value }}"
+                                    {% if form.role.value == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
+                        <div data-field="email" data-validator="notEmpty">{{ form.role.errors }}</div>
+                    </div>
+                    <div class="my-3">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    <!--end::Role-->
+                </div>
+            </form>
+            <div class="mb-n5 text-center">
+                <img src="{% static 'assets/media/auth/chart-graph.png' %}" class="mw-100 mh-300px theme-light-show"
+                     alt="#">
+                <img src="{% static 'assets/media/auth/chart-graph-dark.png' %}" class="mw-100 mh-300px theme-dark-show"
+                     alt="#">
+            </div>
+        </div>
+    </div>
+{% endblock auth_main %}

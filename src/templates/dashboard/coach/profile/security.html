@@ -1,0 +1,349 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Coach profile' %}
+{% endblock title %}
+
+{% block breadcrumbs %}
+    <!-- Розділювач -->
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+
+    <!-- Поточна сторінка (Номер заявки) - Сіра і не клікабельна -->
+    <li class="breadcrumb-item text-gray-500 mx-n1">Coach profile</li>
+
+    <!-- Розділювач -->
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">Security</li>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+    <!--begin::Navbar-->
+    {% include 'includes/_card_intro.html' with active_tab='security' role='coach' %}
+    <!--end::Navbar-->
+
+    <!--begin::Sign-in Method-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+             data-bs-target="#kt_account_signin_method">
+            <div class="card-title m-0">
+                <h3 class="fw-bold m-0">Sign-in Method</h3>
+            </div>
+        </div>
+        <!--end::Card header-->
+        <!--begin::Content-->
+        <div id="kt_account_settings_signin_method" class="collapse show">
+            <!--begin::Card body-->
+            <div class="card-body border-top p-9">
+                <!--begin::Email Address-->
+                <div class="d-flex flex-wrap align-items-center">
+                    <!--begin::Label-->
+                    <div id="kt_signin_email">
+                        <div class="fs-6 fw-bold mb-1">Email Address</div>
+                        <div class="fw-semibold text-gray-600">support@keenthemes.com</div>
+                    </div>
+                    <!--end::Label-->
+                    <!--begin::Edit-->
+                    <div id="kt_signin_email_edit" class="flex-row-fluid d-none">
+                        <!--begin::Form-->
+                        <form id="kt_signin_change_email" class="form" method="post" action="{% url 'account_email' %}">
+
+                            {% csrf_token %}
+
+                            <div class="row mb-6">
+                                <div class="col-lg-6 mb-4 mb-lg-0">
+                                    <div class="fv-row mb-0">
+                                        <label for="emailaddress" class="form-label fs-6 fw-bold mb-3">
+                                            Enter New Email Address
+                                        </label>
+                                        <input
+                                                type="email"
+                                                class="form-control"
+                                                id="emailaddress"
+                                                placeholder="New Email Address"
+                                                name="email"
+                                                value="{{ request.user.email }}"
+                                                required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="fv-row mb-0 mt-8">
+                                        <div class="text-muted fs-6">
+                                            <i class="ki-outline ki-information-5 text-gray-500 fs-5 me-1"></i>
+                                            {% trans 'A verification link will be sent to this new address.' %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <button type="submit" disabled name="action_add"
+                                        class="btn btn-primary me-2 px-6">
+                                    {% trans 'Change Email' %}
+                                </button>
+                                <button id="kt_signin_cancel" type="button"
+                                        class="btn btn-color-gray-500 btn-active-light-primary px-6">
+                                    {% trans 'Cancel' %}
+                                </button>
+                            </div>
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Edit-->
+                    <!--begin::Action-->
+                    <div id="kt_signin_email_button" class="ms-auto">
+                        <button class="btn btn-light btn-active-light-primary">Change Email</button>
+                    </div>
+                    <!--end::Action-->
+                </div>
+                <!--end::Email Address-->
+                <!--begin::Separator-->
+                <div class="separator separator-dashed my-6"></div>
+                <!--end::Separator-->
+                <!--begin::Password-->
+                <div class="d-flex flex-wrap align-items-center mb-10">
+                    <!--begin::Label-->
+                    <div id="kt_signin_password">
+                        <div class="fs-6 fw-bold mb-1">Password</div>
+                        <div class="fw-semibold text-gray-600">************</div>
+                    </div>
+                    <!--end::Label-->
+                    <!--begin::Edit-->
+                    <div id="kt_signin_password_edit" class="flex-row-fluid d-none">
+                        {% if request.user.socialaccount_set.exists %}
+                            <div class="alert alert-dismissible bg-light-warning border border-warning border-dashed d-flex flex-column flex-sm-row p-5 mb-10">
+                                <i class="ki-outline ki-information-5 fs-2hx text-warning me-4 mb-5 mb-sm-0"></i>
+
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h4 class="fw-bold text-gray-900 mb-1">{% trans "Password Management Restrictions" %}</h4>
+                                    <span class="text-gray-700 fw-semibold">
+                                        {% trans "Your account is securely linked with a social provider. You can manage your password and security settings directly through your identity provider's platform." %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <form id="kt_signin_change_password" class="form" method="post">
+                                {% csrf_token %}
+
+                                {% if password_form.non_field_errors %}
+                                    <div class="alert alert-danger mb-5">
+                                        {{ password_form.non_field_errors.0 }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="row mb-1">
+                                    <div class="col-lg-4">
+                                        <div class="fv-row mb-0">
+                                            <label for="currentpassword" class="form-label fs-6 fw-bold mb-3 required">Current
+                                                Password</label>
+                                            <input type="password"
+                                                   class="form-control {% if password_form.oldpassword.errors %}is-invalid{% endif %}"
+                                                   name="oldpassword" id="currentpassword" required/>
+                                            {% if password_form.oldpassword.errors %}
+                                                <div class="invalid-feedback">{{ password_form.oldpassword.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="fv-row mb-0">
+                                            <label for="newpassword" class="form-label fs-6 fw-bold mb-3 required">New
+                                                Password</label>
+                                            <input type="password"
+                                                   class="form-control {% if password_form.password1.errors %}is-invalid{% endif %}"
+                                                   name="password1" id="newpassword" required/>
+                                            {% if password_form.password1.errors %}
+                                                <div class="invalid-feedback">{{ password_form.password1.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="fv-row mb-0">
+                                            <label for="confirmpassword" class="form-label fs-6 fw-bold mb-3 required">Confirm
+                                                New Password</label>
+                                            <input type="password"
+                                                   class="form-control {% if password_form.password2.errors %}is-invalid{% endif %}"
+                                                   name="password2" id="confirmpassword" required/>
+                                            {% if password_form.password2.errors %}
+                                                <div class="invalid-feedback">{{ password_form.password2.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-text mb-5">Password must be at least 8 characters and contain
+                                    symbols.
+                                </div>
+
+                                <div class="d-flex">
+                                    <button id="kt_password_submit" type="submit" name="action_change_password"
+                                            class="btn btn-primary me-2 px-6">
+                                        Update Password
+                                    </button>
+                                    <button id="kt_password_cancel" type="reset"
+                                            class="btn btn-color-gray-500 btn-active-light-primary px-6">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <!--end::Edit-->
+                    <!--begin::Action-->
+                    <div id="kt_signin_password_button" class="ms-auto">
+                        <button class="btn btn-light btn-active-light-primary">Reset Password</button>
+                    </div>
+                    <!--end::Action-->
+                </div>
+                <!--end::Password-->
+                <!--begin::Notice-->
+                <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
+                    <!--begin::Icon-->
+                    <i class="ki-outline ki-shield-tick fs-2tx text-primary me-4"></i>
+                    <!--end::Icon-->
+                    <!--begin::Wrapper-->
+                    <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                        <!--begin::Content-->
+                        <div class="mb-3 mb-md-0 fw-semibold">
+                            <h4 class="text-gray-900 fw-bold">Secure Your Account</h4>
+                            <div class="fs-6 text-gray-700 pe-7">Two-factor authentication adds an extra layer of
+                                security to your account. To log in, in addition you'll need to provide a 6 digit code
+                            </div>
+                        </div>
+                        <!--end::Content-->
+                        <!--begin::Action-->
+                        <a href="#" class="btn btn-primary px-6 align-self-center text-nowrap" data-bs-toggle="modal"
+                           data-bs-target="#kt_modal_two_factor_authentication">Enable</a>
+                        <!--end::Action-->
+                    </div>
+                    <!--end::Wrapper-->
+                </div>
+                <!--end::Notice-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Sign-in Method-->
+
+    <!--begin::Deactivate Account-->
+    <div class="card">
+        <!--begin::Card header-->
+        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+             data-bs-target="#kt_account_deactivate" aria-expanded="true" aria-controls="kt_account_deactivate">
+            <div class="card-title m-0">
+                <h3 class="fw-bold m-0">Deactivate Account</h3>
+            </div>
+        </div>
+        <!--end::Card header-->
+        <!--begin::Content-->
+        <div id="kt_account_settings_deactivate" class="collapse show">
+            <!--begin::Form-->
+            <form id="kt_account_deactivate_form" class="form" method="post"
+                  action="{% url 'coach_deactivate_account' %}">
+                {% csrf_token %}
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+                    <!--begin::Notice-->
+                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+                        <!--begin::Icon-->
+                        <i class="ki-outline ki-information fs-2tx text-warning me-4"></i>
+                        <!--end::Icon-->
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-stack flex-grow-1">
+                            <!--begin::Content-->
+                            <div class="fw-semibold">
+                                <h4 class="text-gray-900 fw-bold">You Are Deactivating Your Account</h4>
+                                <div class="fs-6 text-gray-700">For extra security, this requires you to confirm your
+                                    email or phone number when you reset yousignr password.
+                                    <br/>
+                                    <a class="fw-bold" href="#">Learn more</a></div>
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Notice-->
+                    <!--begin::Form input row-->
+                    <div class="form-check form-check-solid fv-row">
+                        <input name="confirm_deactivation" class="form-check-input" type="checkbox" id="deactivate"/>
+                        <label class="form-check-label fw-semibold ps-2 fs-6" for="deactivate">
+                            I confirm my account deactivation
+                        </label>
+                    </div>
+                    <!--end::Form input row-->
+                </div>
+                <!--end::Card body-->
+                <!--begin::Card footer-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="submit" id="kt_account_deactivate_account_submit" class="btn btn-danger fw-semibold">
+                        Deactivate Account
+                    </button>
+                </div>
+                <!--end::Card footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Deactivate Account-->
+
+{% endblock main_content %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/custom/account/settings/signin-methods.js' %}"></script>
+    <script src="{% static 'assets/js/custom/account/settings/profile-details.js' %}"></script>
+    <script src="{% static 'assets/js/custom/account/settings/deactivate-account.js' %}"></script>
+    <script src="{% static 'assets/js/custom/pages/user-profile/general.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#kt_account_deactivate_form');
+            const submitButton = document.querySelector('#kt_account_deactivate_account_submit');
+
+            if (!form || !submitButton) return;
+
+            submitButton.addEventListener('click', function (e) {
+                // АНАЛІТИКА: Зупиняємо стандартну відправку форми!
+                e.preventDefault();
+
+                // 1. Спочатку перевіряємо, чи поставив користувач галочку
+                const checkbox = form.querySelector('[name="confirm_deactivation"]');
+                if (!checkbox.checked) {
+                    Swal.fire({
+                        text: "You must check the box to confirm deactivation.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-light"
+                        }
+                    });
+                    return; // Зупиняємо скрипт
+                }
+
+                // 2. Якщо галочка стоїть - показуємо той самий попап зі скріншота
+                Swal.fire({
+                    text: "Are you sure you would like to deactivate your account?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    customClass: {
+                        confirmButton: "btn btn-primary", // Синя кнопка Yes
+                        cancelButton: "btn btn-danger"    // Червона кнопка No
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        // АНАЛІТИКА: Якщо користувач натиснув "Yes",
+                        // ми ПРИМУСОВО відправляємо форму на бекенд Django
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock scripts %}

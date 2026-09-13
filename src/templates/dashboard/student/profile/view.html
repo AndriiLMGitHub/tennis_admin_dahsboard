@@ -1,0 +1,49 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Student profile' %}{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">Student profile</li>
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">Overview</li>
+{% endblock %}
+
+{% block main_content %}
+    {% include "includes/_card_intro.html" with active_tab="overview" %}
+
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+            <div class="card-header cursor-pointer">
+                <div class="card-title m-0">
+                    <h3 class="fw-bold m-0">{% trans 'Profile Details' %}</h3>
+                </div>
+                <a href="{% url 'student_profile_edit' %}" class="btn btn-sm btn-primary align-self-center">Edit Profile</a>
+            </div>
+            <div class="card-body p-9">
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-semibold text-muted">{% trans 'Full Name' %}</label>
+                    <div class="col-lg-8">
+                        <span class="fw-bold fs-6 text-gray-800">
+                            {{ request.user.get_full_name|default:_('Not set') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-semibold text-muted">Country</label>
+                    <div class="col-lg-8">
+                        <span class="fw-bold fs-6 text-gray-800">{{ request.user.country|default:"—" }}</span>
+                    </div>
+                </div>
+                <div class="row mb-7">
+                    <label class="col-lg-4 fw-semibold text-muted">Language</label>
+                    <div class="col-lg-8">
+                        <span class="fw-bold fs-6 text-gray-800">{{ request.user.language|default:"—" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

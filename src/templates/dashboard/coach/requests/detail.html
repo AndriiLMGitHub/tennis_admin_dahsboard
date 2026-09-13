@@ -1,0 +1,321 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Detail request from student' %}{% endblock title %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        <a href="{% url 'coach_list_requests' %}" class="text-hover-primary">{% trans "My Requests" %}</a>
+    </li>
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{{ request_item.service.name }}</li>
+{% endblock %}
+
+{% block main_content %}
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2>{% trans "Request Details:" %} {{ request_item.service.name }}</h2>
+    </div>
+
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <form method="POST" enctype="multipart/form-data"
+              class="form d-flex flex-column flex-lg-row fv-plugins-bootstrap5 fv-plugins-framework">
+            {% csrf_token %}
+
+            <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
+
+                <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>{% trans "Status" %}</h2>
+                        </div>
+                        <div class="card-toolbar">
+                            <div class="rounded-circle bg-{{ request_item.status_color_class }} w-15px h-15px"></div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <select name="status" class="form-select mb-2" data-control="select2" data-hide-search="true">
+                            <option value="new"
+                                    {% if request_item.status == 'new' %}selected{% endif %}>{% trans "New" %}</option>
+                            <option value="assigned"
+                                    {% if request_item.status == 'assigned' %}selected{% endif %}>{% trans "Assigned" %}</option>
+                            <option value="in_progress"
+                                    {% if request_item.status == 'in_progress' %}selected{% endif %}>{% trans "In Progress" %}</option>
+                            <option value="completed"
+                                    {% if request_item.status == 'completed' %}selected{% endif %}>{% trans "Completed" %}</option>
+                            <option value="rejected"
+                                    {% if request_item.status == 'rejected' %}selected{% endif %}>{% trans "Rejected" %}</option>
+                        </select>
+                        <div class="text-muted fs-7">{% trans "Update the current status of this request." %}</div>
+                    </div>
+                </div>
+
+                <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>{% trans "Request Details" %}</h2>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="d-flex flex-column gap-5">
+
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-gray-800">{% trans "Client" %}:</span>
+                                <span class="text-gray-600">{{ request_item.user.get_full_name|default:request_item.user.email }}</span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-gray-800">{% trans "Service" %}:</span>
+                                <span class="text-gray-600">{{ request_item.service.name }}</span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-gray-800">{% trans "Created at" %}:</span>
+                                <span class="text-gray-600">{{ request_item.created_at|date:"d M Y, H:i" }}</span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-gray-800">{% trans "Deadline" %}:</span>
+                                {% if request_item.deadline %}
+                                    <span class="badge badge-light-danger align-self-start mt-1">{{ request_item.deadline|date:"d M Y" }}</span>
+                                {% else %}
+                                    <span class="text-gray-500 fst-italic">{% trans "Not specified" %}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="separator separator-dashed my-2"></div>
+
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-gray-800 mb-1">{% trans "Client Comment" %}:</span>
+                                {% if request_item.comment %}
+                                    <div class="text-gray-700 fs-6">{{ request_item.comment|linebreaksbr }}</div>
+                                {% else %}
+                                    <span class="text-gray-500 fst-italic">{% trans "No text description provided." %}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex flex-column">
+                                <div class="fw-bold text-gray-800 mb-4">{% trans "Student Materials" %}:</div>
+                                <div class="d-flex flex-wrap gap-6">
+                                    {% for media_item in request_item.media.all %}
+                                        {% if media_item.file %}
+                                            <div class="d-flex flex-column align-items-center text-center">
+                                                <a href="{{ media_item.file.url }}" target="_blank"
+                                                   class="text-gray-800 text-hover-primary d-flex flex-column align-items-center">
+                                                    <div class="symbol symbol-60px mb-3 bg-light-primary d-flex justify-content-center align-items-center rounded">
+                                                        <i class="ki-outline ki-files fs-3x text-primary"></i>
+                                                    </div>
+                                                    <div class="fs-5 fw-bold mb-1 text-truncate w-100"
+                                                         style="max-width: 150px;" title="{% trans 'Download File' %}">
+                                                        {% trans "Attached File" %}
+                                                    </div>
+                                                </a>
+                                                <div class="fs-7 fw-semibold text-gray-500">{{ media_item.uploaded_at|timesince }} {% trans "ago" %}</div>
+                                            </div>
+                                        {% elif media_item.url %}
+                                            <div class="d-flex flex-column align-items-center text-center">
+                                                <a href="{{ media_item.url }}" target="_blank"
+                                                   class="text-gray-800 text-hover-success d-flex flex-column align-items-center">
+                                                    <div class="symbol symbol-60px mb-3 bg-light-success d-flex justify-content-center align-items-center rounded">
+                                                        <i class="ki-outline ki-link fs-3x text-success"></i>
+                                                    </div>
+                                                    <div class="fs-5 fw-bold mb-1 text-truncate w-100"
+                                                         style="max-width: 150px;" title="{{ media_item.url }}">
+                                                        {% trans "External Link" %}
+                                                    </div>
+                                                </a>
+                                                <div class="fs-7 fw-semibold text-gray-500">{{ media_item.uploaded_at|timesince }} {% trans "ago" %}</div>
+                                            </div>
+                                        {% endif %}
+                                    {% empty %}
+                                        <div class="w-100">
+                                            <div class="d-flex align-items-center bg-light rounded p-5">
+                                                <i class="ki-outline ki-information-5 text-gray-500 fs-1 me-3"></i>
+                                                <span class="text-gray-600 fs-6">{% trans "No files or links attached to this request." %}</span>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+
+                <div class="card card-flush py-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>{% trans "Coach Report & Response" %}</h2>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-0">
+
+                        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8">
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab"
+                                   href="#tab_structured_analysis">
+                                    {% trans "Structured Analysis" %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab"
+                                   href="#tab_priorities">
+                                    {% trans "Top 3 Priorities" %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab"
+                                   href="#tab_additional_materials">
+                                    {% trans "Files & General Comments" %}
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade show active" id="tab_structured_analysis" role="tabpanel">
+                                <div class="mb-10 fv-row">
+                                    <label class="form-label">{% trans "Overall Assessment" %}</label>
+                                    <textarea name="overall_assessment" class="form-control mb-2" rows="4"
+                                              placeholder="{% trans 'General evaluation...' %}">{{ report.overall_assessment|default:'' }}</textarea>
+                                </div>
+
+                                <h3 class="fs-5 fw-bold text-gray-800 mb-5">{% trans "Key Strengths" %}</h3>
+                                <div class="row g-5">
+                                    <div class="col-md-4 fv-row">
+                                        <label class="form-label">{% trans "Strength 1" %}</label>
+                                        <input type="text" name="strength_1" class="form-control mb-2"
+                                               value="{{ report.strength_1|default:'' }}">
+                                    </div>
+                                    <div class="col-md-4 fv-row">
+                                        <label class="form-label">{% trans "Strength 2" %}</label>
+                                        <input type="text" name="strength_2" class="form-control mb-2"
+                                               value="{{ report.strength_2|default:'' }}">
+                                    </div>
+                                    <div class="col-md-4 fv-row">
+                                        <label class="form-label">{% trans "Strength 3" %}</label>
+                                        <input type="text" name="strength_3" class="form-control mb-2"
+                                               value="{{ report.strength_3|default:'' }}">
+                                    </div>
+                                </div>
+
+                                <div class="separator separator-dashed my-8"></div>
+
+                                <div class="fv-row">
+                                    <label class="form-label fw-bold fs-5">{% trans "2–4 Week Action Plan" %}</label>
+                                    <textarea name="action_plan" class="form-control mb-2" rows="4"
+                                              placeholder="{% trans 'Primary practice focus for the next 2-4 weeks...' %}">{{ report.action_plan|default:'' }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab_priorities" role="tabpanel">
+                                <div class="border border-dashed border-gray-300 rounded p-7 mb-7">
+                                    <h4 class="fs-5 fw-bold text-primary mb-5">{% trans "Priority #1" %}</h4>
+                                    <div class="mb-5 fv-row">
+                                        <label class="form-label">{% trans "Issue" %}</label>
+                                        <input type="text" name="priority_1_issue" class="form-control bg-white"
+                                               value="{{ report.priority_1_issue|default:'' }}">
+                                    </div>
+                                    <div class="row g-5">
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Why it matters" %}</label>
+                                            <textarea name="priority_1_why" class="form-control bg-white"
+                                                      rows="3">{{ report.priority_1_why|default:'' }}</textarea>
+                                        </div>
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Recommended drill or exercise" %}</label>
+                                            <textarea name="priority_1_drill" class="form-control bg-white"
+                                                      rows="3">{{ report.priority_1_drill|default:'' }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-dashed border-gray-300 rounded p-7 mb-7">
+                                    <h4 class="fs-5 fw-bold text-gray-800 mb-5">{% trans "Priority #2" %}</h4>
+                                    <div class="mb-5 fv-row">
+                                        <label class="form-label">{% trans "Issue" %}</label>
+                                        <input type="text" name="priority_2_issue" class="form-control"
+                                               value="{{ report.priority_2_issue|default:'' }}">
+                                    </div>
+                                    <div class="row g-5">
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Why it matters" %}</label>
+                                            <textarea name="priority_2_why" class="form-control"
+                                                      rows="3">{{ report.priority_2_why|default:'' }}</textarea>
+                                        </div>
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Recommended drill or exercise" %}</label>
+                                            <textarea name="priority_2_drill" class="form-control"
+                                                      rows="3">{{ report.priority_2_drill|default:'' }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-dashed border-gray-300 rounded p-7">
+                                    <h4 class="fs-5 fw-bold text-gray-800 mb-5">{% trans "Priority #3" %}</h4>
+                                    <div class="mb-5 fv-row">
+                                        <label class="form-label">{% trans "Issue" %}</label>
+                                        <input type="text" name="priority_3_issue" class="form-control"
+                                               value="{{ report.priority_3_issue|default:'' }}">
+                                    </div>
+                                    <div class="row g-5">
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Why it matters" %}</label>
+                                            <textarea name="priority_3_why" class="form-control"
+                                                      rows="3">{{ report.priority_3_why|default:'' }}</textarea>
+                                        </div>
+                                        <div class="col-md-6 fv-row">
+                                            <label class="form-label">{% trans "Recommended drill or exercise" %}</label>
+                                            <textarea name="priority_3_drill" class="form-control"
+                                                      rows="3">{{ report.priority_3_drill|default:'' }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab_additional_materials" role="tabpanel">
+                                <div class="mb-10 fv-row">
+                                    <label class="form-label">{% trans "Additional Comments" %}</label>
+                                    <textarea name="text" class="form-control mb-2" rows="6"
+                                              placeholder="{% trans 'Provide any additional advice or feedback that does not fit into the structured analysis...' %}">{{ report.text|default:'' }}</textarea>
+                                </div>
+                                <div class="mb-10 fv-row">
+                                    <label class="form-label">{% trans "External Link" %}</label>
+                                    <input type="url" name="external_link" class="form-control mb-2"
+                                           placeholder="https://..." value="{{ report.external_link|default:'' }}">
+                                    <div class="text-muted fs-7">{% trans "Attach an external resource, video, or shared document link." %}</div>
+                                </div>
+                                <div class="fv-row">
+                                    <label class="form-label d-block">{% trans "Attach PDF File" %}</label>
+                                    {% if report.pdf %}
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="ki-outline ki-file fs-2 text-primary me-2"></i>
+                                            <a href="{{ report.pdf.url }}" target="_blank"
+                                               class="fw-bold text-gray-800 text-hover-primary">{% trans "Current File" %}</a>
+                                        </div>
+                                    {% endif %}
+                                    <input type="file" name="pdf" class="form-control mb-2" accept=".pdf">
+                                    <div class="text-muted fs-7">{% trans "Upload a customized plan or document. Only PDF files are accepted." %}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'coach_list_requests' %}" class="btn btn-light me-5">{% trans "Cancel" %}</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="indicator-label">{% trans "Save Changes" %}</span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endblock main_content %}
+
+{% block scripts %}
+{% endblock scripts %}

@@ -1,0 +1,125 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'List requests' %}{% endblock title %}
+
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans "My Requests" %}</li>
+{% endblock %}
+
+
+{% block main_content %}
+    <h1 class="mb-5">
+        Hello, coach requests!
+    </h1>
+    <div class="row g-6 g-xl-9">
+        {% for request_item in requests.object_list %}
+            <div class="col-md-6">
+                <div class="card border-hover-primary h-100 shadow-sm">
+
+                    <div class="card-header border-0 pt-9">
+                        <div class="card-title m-0">
+                            <div class="symbol symbol-50px w-50px bg-light me-5">
+                            <span class="symbol-label">
+                                <i class="ki-outline ki-document fs-2x text-{{ request_item.status_color_class }}"></i>
+                            </span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <a href="{% url 'coach_request_detail' request_item.id %}"
+                                   class="fs-4 fw-bold text-gray-900 text-hover-primary">
+                                    {{ request_item.service.name }}
+                                </a>
+                                <span class="fs-6 fw-semibold text-gray-500">
+                                {% trans "Specialty" %}: {{ request_item.get_specialty_needed_display }}
+                            </span>
+                            </div>
+                        </div>
+
+                        <div class="card-toolbar">
+                        <span class="badge badge-light-{{ request_item.status_color_class }} fw-bold me-auto px-4 py-3">
+                            {{ request_item.get_status_display }}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-9">
+                        <div class="d-flex flex-wrap flex-stack mb-6">
+                            <div class="d-flex flex-column">
+                            <span class="fs-6 fw-bold text-gray-800">
+                                <i class="ki-outline ki-profile-circle fs-5 text-gray-500 me-1"></i>
+                                {{ request_item.user.get_full_name|default:request_item.user.email }}
+                            </span>
+                                <span class="fs-7 fw-semibold text-gray-500 mt-1">
+                                <i class="ki-outline ki-calendar fs-6 text-gray-500 me-1"></i>
+                                {{ request_item.created_at|date:"d M Y, H:i" }}
+                            </span>
+                            </div>
+
+                            {% if request_item.deadline %}
+                                <div class="d-flex flex-column align-items-end">
+                            <span class="badge badge-outline badge-danger fs-8 fw-bold">
+                                {% trans "Deadline" %}: {{ request_item.deadline|date:"d M Y" }}
+                            </span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if request_item.comment %}
+                            <div class="fs-6 fw-normal text-gray-700 mb-7 line-clamp-2">
+                                "{{ request_item.comment|truncatechars:100 }}"
+                            </div>
+                        {% else %}
+                            <div class="fs-6 fw-normal text-gray-400 mb-7 fst-italic">
+                                {% trans "No additional comments from the client." %}
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex flex-column w-100 mt-auto">
+                            <div class="d-flex flex-stack mb-2">
+                                <span class="fs-6 fw-semibold text-gray-500">{% trans "Progress" %}</span>
+                                <span class="fs-6 fw-bold text-gray-800">{{ request_item.progress_percentage }}%</span>
+                            </div>
+                            <div class="progress h-8px bg-light-{{ request_item.status_color_class }}">
+                                <div class="progress-bar bg-{{ request_item.status_color_class }}"
+                                     role="progressbar"
+                                     style="width: {{ request_item.progress_percentage }}%"
+                                     aria-valuenow="{{ request_item.progress_percentage }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer border-0 pt-0 pb-9 text-end">
+                        <a href="{% url 'coach_request_detail' request_item.id %}"
+                           class="btn btn-sm btn-light-primary fw-bold">
+                            {% trans "View Details" %} <i class="ki-outline ki-arrow-right fs-5 ms-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center p-10">
+                        <img src="{% static 'assets/media/illustrations/sketchy-1/5.png' %}" alt="Empty"
+                             class="mw-100 mb-8 h-200px">
+                        <div class="fs-2 fw-bold text-dark mb-3">{% trans "No requests found" %}</div>
+                        <div class="fs-6 fw-semibold text-gray-500">
+                            {% trans "You currently do not have any service requests." %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock main_content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

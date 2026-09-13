@@ -1,0 +1,388 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create request' %}{% endblock title %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        <a href="{% url 'student_list_requests' %}" class="text-hover-primary">{% trans "My Requests" %}</a>
+    </li>
+
+    <li class="breadcrumb-item">
+        <i class="ki-outline ki-right fs-7 text-gray-700"></i>
+    </li>
+
+    <li class="breadcrumb-item text-gray-500 mx-n1">{{ request_item.service.name }}</li>
+{% endblock %}
+
+{% block main_content %}
+    <div class="app-content flex-column-fluid" id="kt_app_content">
+
+        <div class="card mb-5 mb-xl-10">
+            <div class="card-body pt-9 pb-0">
+                <!--begin::Details-->
+                <div class="d-flex flex-wrap flex-sm-nowrap">
+
+                    <!--begin::Pic (Можна замінити на SVG або іконку послуги)-->
+                    <div class="me-7 mb-4">
+                        <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
+                            <div class="d-flex flex-center flex-shrink-0 bg-light-primary rounded w-100px h-100px w-lg-150px h-lg-150px">
+                                <!-- Використовуємо універсальну іконку -->
+                                <i class="ki-duotone ki-briefcase fs-3x text-primary">
+                                    <span class="path1"></span><span class="path2"></span>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Pic-->
+
+                    <!--begin::Info-->
+                    <div class="flex-grow-1">
+                        <!--begin::Title-->
+                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+
+                            <!--begin::User-->
+                            <div class="d-flex flex-column">
+                                <!--begin::Name & Status-->
+                                <div class="d-flex align-items-center mb-2">
+                            <span class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">
+                                {{ request_item.service.name }}
+                            </span>
+                                    <span class="badge badge-light-{{ request_item.status_color_class }} ms-2">
+                                {{ request_item.get_status_display }}
+                            </span>
+                                </div>
+                                <!--end::Name & Status-->
+
+                                <!--begin::Comment-->
+                                <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
+                            <span class="text-gray-500" style="max-width: 600px;">
+                                <!-- Використовуємо default для пустих коментарів і обрізаємо занадто довгі -->
+                                {{ request_item.comment|default:_("No comment provided.")|truncatechars:120 }}
+                            </span>
+                                </div>
+                                <!--end::Comment-->
+                            </div>
+                            <!--end::User-->
+
+                            <!--begin::Progress Bar (Динамічний, який ми робили раніше)-->
+                            <div class="d-flex flex-column w-200px w-sm-250px mt-3">
+                                <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-2">
+                                    <span>{% trans 'Progress' %}</span>
+                                    <span>{{ request_item.progress_percentage }}%</span>
+                                </div>
+                                <div class="h-8px bg-light rounded mb-3">
+                                    <div class="bg-{{ request_item.status_color_class }} rounded h-8px"
+                                         role="progressbar"
+                                         style="width: {{ request_item.progress_percentage }}%"
+                                         aria-valuenow="{{ request_item.progress_percentage }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <!--end::Progress Bar-->
+
+                        </div>
+                        <!--end::Title-->
+
+                        <!--begin::Stats-->
+                        <div class="d-flex flex-wrap flex-stack">
+                            <!--begin::Wrapper-->
+                            <div class="d-flex flex-column flex-grow-1 pe-8">
+                                <div class="d-flex flex-wrap">
+
+                                    <!-- Stat 1: Created Date (З правильним форматуванням) -->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-duotone ki-calendar fs-3 text-primary me-2"><span
+                                                    class="path1"></span><span class="path2"></span></i>
+                                            <div class="fs-4 fw-bold">{{ request_item.created_at|date:"M j, Y" }}</div>
+                                        </div>
+                                        <div class="fw-semibold fs-6 text-gray-500">{% trans 'Created Date' %}</div>
+                                    </div>
+
+                                    <!-- Stat 2: Assigned Coach -->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-duotone ki-profile-user fs-3 text-success me-2"><span
+                                                    class="path1"></span><span class="path2"></span><span
+                                                    class="path3"></span><span class="path4"></span></i>
+                                            <div class="fs-4 fw-bold">
+                                                {% if request_item.assigned_specialist %}
+                                                    {{ request_item.assigned_specialist.get_full_name|default:request_item.assigned_specialist.email }}
+                                                {% else %}
+                                                    <span class="text-muted fs-6">{% trans 'Pending' %}</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="fw-semibold fs-6 text-gray-500">{% trans 'Assigned Coach' %}</div>
+                                    </div>
+
+                                    <!-- Stat 3: Request ID -->
+                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ki-duotone ki-check-square fs-3 text-info me-2"><span
+                                                    class="path1"></span><span class="path2"></span></i>
+                                            <div class="fs-4 fw-bold">#{{ request_item.id }}</div>
+                                        </div>
+                                        <div class="fw-semibold fs-6 text-gray-500">{% trans 'Request ID' %}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Wrapper-->
+                        </div>
+                        <!--end::Stats-->
+                    </div>
+                    <!--end::Info-->
+                </div>
+                <!--end::Details-->
+
+                <!--begin::Navs (Відступи для майбутніх вкладок, якщо потрібні)-->
+                <div class="separator mt-4"></div>
+                <!--end::Navs-->
+                {% if report and report.created_by %}
+                    <div class="card card-flush my-8">
+
+                        <!-- Заголовок звіту -->
+                        <div class="card-header bg-gray-300 border-bottom-dashed py-4">
+                            <div class="card-title d-flex flex-column">
+                                <h2 class="text-primary mb-0">{% trans "Coach Response & Analysis" %}</h2>
+                                <span class="text-gray-600 fs-7 fw-semibold mt-1">
+                                    {% trans "Provided by" %} {{ request_item.assigned_specialist.get_full_name|default:request_item.assigned_specialist.email }}
+                                    &bull; {{ report.created_at|date:"d M Y, H:i" }}
+                                </span>
+                            </div>
+
+                            <div class="card-toolbar">
+                                <a href="{% url 'generate_report_docx' report.id %}"
+                                   class="btn btn-primary btn-sm d-flex align-items-center shadow-sm fw-bold hover-elevate-up">
+                                    <i class="ki-outline ki-document fs-2 me-2"></i>
+                                    {% trans "Generate .docx" %}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body pt-7">
+
+                            <!-- 1. ЗАГАЛЬНА ОЦІНКА -->
+                            {% if report.overall_assessment %}
+                                <div class="mb-8">
+                                    <h3 class="fs-5 fw-bold text-gray-800 mb-3">{% trans "Overall Assessment" %}</h3>
+                                    <div class="fs-6 fw-normal text-gray-700">
+                                        {{ report.overall_assessment|linebreaksbr }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 2. СИЛЬНІ СТОРОНИ -->
+                            {% if report.strength_1 or report.strength_2 or report.strength_3 %}
+                                <div class="mb-10">
+                                    <h3 class="fs-5 fw-bold text-gray-800 mb-4">{% trans "Key Strengths" %}</h3>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        {% if report.strength_1 %}
+                                            <span class="badge badge-light-success fw-bold fs-6 px-4 py-3 border border-success border-dashed">
+                                <i class="ki-outline ki-check-circle fs-3 text-success me-2"></i>{{ report.strength_1 }}
+                            </span>
+                                        {% endif %}
+                                        {% if report.strength_2 %}
+                                            <span class="badge badge-light-success fw-bold fs-6 px-4 py-3 border border-success border-dashed">
+                                <i class="ki-outline ki-check-circle fs-3 text-success me-2"></i>{{ report.strength_2 }}
+                            </span>
+                                        {% endif %}
+                                        {% if report.strength_3 %}
+                                            <span class="badge badge-light-success fw-bold fs-6 px-4 py-3 border border-success border-dashed">
+                                <i class="ki-outline ki-check-circle fs-3 text-success me-2"></i>{{ report.strength_3 }}
+                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 3. ТОП 3 ПРІОРИТЕТИ -->
+                            {% if report.priority_1_issue or report.priority_2_issue or report.priority_3_issue %}
+                                <div class="mb-10">
+                                    <h3 class="fs-5 fw-bold text-gray-800 mb-5">{% trans "Top Priorities for Improvement" %}</h3>
+                                    <div class="d-flex flex-column gap-5">
+
+                                        <!-- Пріоритет #1 (Виділений синім кольором як головний) -->
+                                        {% if report.priority_1_issue %}
+                                            <div class="border border-dashed border-primary rounded p-6">
+                                                <h4 class="fs-4 fw-bold text-primary mb-3">
+                                                    #1 {{ report.priority_1_issue }}</h4>
+                                                {% if report.priority_1_why %}
+                                                    <div class="mb-3">
+                                                        <span class="fw-bold text-gray-800">{% trans "Why it matters:" %}</span>
+                                                        <span class="text-gray-700 ms-1">{{ report.priority_1_why }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if report.priority_1_drill %}
+                                                    <div class="d-flex align-items-start mt-3 bg-white p-4 rounded border border-primary border-dashed">
+                                                        <i class="ki-outline ki-rocket fs-2 text-primary me-3 mt-1"></i>
+                                                        <div>
+                                                            <div class="fw-bold text-gray-800">{% trans "Recommended Drill/Exercise:" %}</div>
+                                                            <div class="text-gray-700 mt-1">{{ report.priority_1_drill }}</div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Пріоритет #2 (Нейтральний колір) -->
+                                        {% if report.priority_2_issue %}
+                                            <div class="border border-dashed border-gray-300 bg-light rounded p-6">
+                                                <h4 class="fs-5 fw-bold text-gray-800 mb-3">
+                                                    #2 {{ report.priority_2_issue }}</h4>
+                                                {% if report.priority_2_why %}
+                                                    <div class="mb-3">
+                                                        <span class="fw-bold text-gray-800">{% trans "Why it matters:" %}</span>
+                                                        <span class="text-gray-700 ms-1">{{ report.priority_2_why }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if report.priority_2_drill %}
+                                                    <div class="d-flex align-items-start mt-3 bg-white p-4 rounded border border-gray-300 border-dashed">
+                                                        <i class="ki-outline ki-rocket fs-2 text-gray-600 me-3 mt-1"></i>
+                                                        <div>
+                                                            <div class="fw-bold text-gray-800">{% trans "Recommended Drill/Exercise:" %}</div>
+                                                            <div class="text-gray-700 mt-1">{{ report.priority_2_drill }}</div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Пріоритет #3 (Нейтральний колір) -->
+                                        {% if report.priority_3_issue %}
+                                            <div class="border border-dashed border-gray-300 bg-light rounded p-6">
+                                                <h4 class="fs-5 fw-bold text-gray-800 mb-3">
+                                                    #3 {{ report.priority_3_issue }}</h4>
+                                                {% if report.priority_3_why %}
+                                                    <div class="mb-3">
+                                                        <span class="fw-bold text-gray-800">{% trans "Why it matters:" %}</span>
+                                                        <span class="text-gray-700 ms-1">{{ report.priority_3_why }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if report.priority_3_drill %}
+                                                    <div class="d-flex align-items-start mt-3 bg-white p-4 rounded border border-gray-300 border-dashed">
+                                                        <i class="ki-outline ki-rocket fs-2 text-gray-600 me-3 mt-1"></i>
+                                                        <div>
+                                                            <div class="fw-bold text-gray-800">{% trans "Recommended Drill/Exercise:" %}</div>
+                                                            <div class="text-gray-700 mt-1">{{ report.priority_3_drill }}</div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 4. ПЛАН ДІЙ НА 2-4 ТИЖНІ -->
+                            {% if report.action_plan %}
+                                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-10 p-6">
+                                    <i class="ki-outline ki-calendar-tick fs-2tx text-warning me-4 mt-1"></i>
+                                    <div class="d-flex flex-column">
+                                        <div class="fs-4 fw-bold text-gray-900 mb-1">{% trans "2–4 Week Action Plan" %}</div>
+                                        <div class="fs-6 text-gray-700">{{ report.action_plan|linebreaksbr }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 5. ДОДАТКОВІ КОМЕНТАРІ (Старе поле text) -->
+                            {% if report.text %}
+                                <div class="mb-8">
+                                    <h3 class="fs-6 fw-bold text-gray-800 mb-3">{% trans "Additional Comments" %}</h3>
+                                    <div class="fs-6 fw-normal text-gray-700 bg-light rounded p-5 border border-gray-200">
+                                        {{ report.text|linebreaksbr }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- 6. ПРИКРІПЛЕНІ МАТЕРІАЛИ (PDF / Лінк) -->
+                            {% if report.pdf or report.external_link %}
+                                <div class="separator separator-dashed mb-8"></div>
+
+                                <h3 class="fs-6 fw-bold text-gray-800 mb-5">{% trans "Attached Resources" %}</h3>
+                                <div class="d-flex flex-column flex-sm-row gap-5">
+                                    {% if report.pdf %}
+                                        <div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-250px px-7 py-3 hover-elevate-up">
+                                            <div class="symbol symbol-40px me-4">
+                                                <img src="{% static 'assets/media/svg/files/pdf.svg' %}"
+                                                     class="theme-light-show" alt="PDF">
+                                                <img src="{% static 'assets/media/svg/files/pdf-dark.svg' %}"
+                                                     class="theme-dark-show" alt="PDF">
+                                            </div>
+                                            <div class="d-flex flex-column me-5">
+                                                <a href="{{ report.pdf.url }}" target="_blank"
+                                                   class="fw-bold text-gray-800 text-hover-primary fs-6">
+                                                    {% trans "Coach Report" %}
+                                                </a>
+                                                <span class="fs-7 text-gray-500">{% trans "PDF Document" %}</span>
+                                            </div>
+                                            <div class="ms-auto">
+                                                <a href="{{ report.pdf.url }}" target="_blank"
+                                                   class="btn btn-icon btn-light-danger btn-sm shadow-sm">
+                                                    <i class="ki-outline ki-file-down fs-2"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if report.external_link %}
+                                        <div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-250px px-7 py-3 hover-elevate-up">
+                                            <div class="symbol symbol-40px me-4">
+                                                <span class="symbol-label bg-light-primary">
+                                                    <i class="ki-outline ki-fasten fs-2 text-primary"></i>
+                                                </span>
+                                            </div>
+                                            <div class="d-flex flex-column me-5">
+                                                <a href="{{ report.external_link }}" target="_blank"
+                                                   class="fw-bold text-gray-800 text-hover-primary fs-6">
+                                                    {% trans "External Resource" %}
+                                                </a>
+                                                <span class="fs-7 text-gray-500">{% trans "Web Link" %}</span>
+                                            </div>
+                                            <div class="ms-auto">
+                                                <a href="{{ report.external_link }}" target="_blank"
+                                                   class="btn btn-icon btn-light-primary btn-sm shadow-sm">
+                                                    <i class="ki-outline ki-exit-right fs-2"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% elif request_item.status == 'rejected' %}
+                    <div class="card card-flush border-dashed border-danger my-8 bg-light-danger">
+                        <div class="card-body text-center py-10">
+                            <i class="ki-outline ki-cross-circle fs-3x text-danger mb-4"></i>
+                            <div class="fs-4 fw-bold text-danger mb-2">{% trans "Request Rejected" %}</div>
+                            <div class="fs-6 text-danger">
+                                {% trans "This request has been rejected. No further report or response will be provided." %}
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <div class="card card-flush border-dashed border-gray-300 my-8">
+                        <div class="card-body text-center py-10">
+                            <i class="ki-outline ki-time fs-3x text-gray-400 mb-4"></i>
+                            <div class="fs-4 fw-bold text-gray-800 mb-2">{% trans "Awaiting Coach Response" %}</div>
+                            <div class="fs-6 text-gray-500">
+                                {% trans "Your assigned coach has not provided a final report or response yet. Please check back later." %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
+
+{% block scripts %}{% endblock scripts %}

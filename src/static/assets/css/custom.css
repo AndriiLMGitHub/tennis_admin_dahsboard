@@ -1,0 +1,17 @@
+/* Додаткова палітра для аватарів (Metronic Style) */
+
+/* Purple */
+.text-purple { color: #8950FC !important; }
+.bg-light-purple { background-color: rgba(137, 80, 252, 0.1) !important; }
+
+/* Teal */
+.text-teal { color: #0abb87 !important; }
+.bg-light-teal { background-color: rgba(10, 187, 135, 0.1) !important; }
+
+/* Pink */
+.text-pink { color: #d63384 !important; }
+.bg-light-pink { background-color: rgba(214, 51, 132, 0.1) !important; }
+
+/* Indigo */
+.text-indigo { color: #6610f2 !important; }
+.bg-light-indigo { background-color: rgba(102, 16, 242, 0.1) !important; }

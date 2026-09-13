@@ -1,0 +1,61 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Django / application runtime artifacts
+db.sqlite3
+*.sqlite3
+staticfiles/
+media/
+celerybeat-schedule
+celerybeat-schedule-*
+dump.rdb
+
+# Translation builds
+*.mo
+
+# Test, coverage, and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+.hypothesis/
+
+# Packaging / build outputs
+build/
+dist/
+site/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE / editor files
+.idea/
+.vscode/
+.fleet/
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+

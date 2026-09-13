@@ -1,0 +1,161 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Contact Us' %}{% endblock title %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        {% if request.user.role == 'Coach' %}
+            <a href="{% url 'coach_list_requests' %}" class="text-hover-primary">{% trans "Assigned to me" %}</a>
+        {% else %}
+            <a href="{% url 'student_list_requests' %}" class="text-hover-primary">{% trans "My Requests" %}</a>
+        {% endif %}
+    </li>
+
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans 'Contact Us' %}</li>
+{% endblock breadcrumbs %}
+
+{% block main_content %}
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+
+                <div class="card">
+                    <div class="card-body p-lg-17">
+
+                        <div class="row mb-6">
+                            <div class="col-md-6 pe-lg-10">
+
+                                <form method="POST" action="{% url 'contact_us' %}" class="form">
+                                    {% csrf_token %}
+
+                                    <h1 class="fw-bold text-gray-900 mb-9">{% trans "Send Us an Email" %}</h1>
+
+                                    {% if form.non_field_errors %}
+                                        <div class="alert alert-danger d-flex align-items-center p-5 mb-10">
+                                            <i class="ki-outline ki-shield-cross fs-2hx text-danger me-4"></i>
+                                            <div class="d-flex flex-column">
+                                                <h4 class="mb-1 text-danger">{% trans "Submission Error" %}</h4>
+                                                {% for error in form.non_field_errors %}
+                                                    <span class="text-danger">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="row g-5 mb-8">
+                                        <div class="col-md-6 fv-row">
+                                            <label class="fs-6 fw-semibold mb-2 {% if form.name.errors %}text-danger{% endif %}">{{ form.name.label }}</label>
+                                            {{ form.name }}
+                                            {% if form.name.errors %}
+                                                <div class="text-danger fs-7 mt-2">
+                                                    {% for error in form.name.errors %}{{ error }}<br>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="col-md-6 fv-row">
+                                            <label class="fs-6 fw-semibold mb-2 {% if form.email.errors %}text-danger{% endif %}">{{ form.email.label }}</label>
+                                            {{ form.email }}
+                                            {% if form.email.errors %}
+                                                <div class="text-danger fs-7 mt-2">
+                                                    {% for error in form.email.errors %}{{ error }}<br>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="fv-row mb-8">
+                                        <label class="fs-6 fw-semibold mb-2 {% if form.subject.errors %}text-danger{% endif %}">{{ form.subject.label }}</label>
+                                        {{ form.subject }}
+                                        {% if form.subject.errors %}
+                                            <div class="text-danger fs-7 mt-2">
+                                                {% for error in form.subject.errors %}{{ error }}<br>{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="fv-row mb-8">
+                                        <label class="fs-6 fw-semibold mb-2 {% if form.message.errors %}text-danger{% endif %}">{{ form.message.label }}</label>
+                                        {{ form.message }}
+                                        {% if form.message.errors %}
+                                            <div class="text-danger fs-7 mt-2">
+                                                {% for error in form.message.errors %}{{ error }}<br>{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">{% trans "Send Feedback" %}</span>
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <div class="col-md-6 ps-lg-10">
+                                <div id="kt_contact_map" class="w-100 rounded mb-2 mb-lg-0 mt-2"
+                                     style="height: 486px"></div>
+                            </div>
+                        </div>
+
+                        <div class="row g-5 mb-5 mb-lg-15">
+                            <div class="col-sm-6 pe-lg-10">
+                                <div class="bg-light card-rounded d-flex flex-column flex-center flex-center p-10 h-100">
+                                    <i class="ki-outline ki-briefcase fs-3tx text-primary"></i>
+                                    <h1 class="text-gray-900 fw-bold my-5">{% trans "Let’s Speak" %}</h1>
+                                    <div class="text-gray-700 fw-semibold fs-2">1 (833) 597-7538</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ps-lg-10">
+                                <div class="text-center bg-light card-rounded d-flex flex-column flex-center p-10 h-100">
+                                    <i class="ki-outline ki-geolocation fs-3tx text-primary"></i>
+                                    <h1 class="text-gray-900 fw-bold my-5">{% trans "Our Head Office" %}</h1>
+                                    <div class="text-gray-700 fs-3 fw-semibold">Churchill-laan 16 II, 1052 CD,
+                                        Amsterdam
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4 bg-light text-center">
+                            <div class="card-body py-12">
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/facebook-4.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/instagram-2-1.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/github.svg' %}" class="h-30px my-2"
+                                        alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/behance.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/pinterest-p.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/twitter.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                                <a href="#" class="mx-4"><img
+                                        src="{% static 'assets/media/svg/brand-logos/dribbble-icon-1.svg' %}"
+                                        class="h-30px my-2" alt=""/></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
+
+{% block scripts %}
+{% endblock scripts %}

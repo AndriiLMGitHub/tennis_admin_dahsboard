@@ -1,0 +1,8 @@
+# ----- For celery beat and worker -----
+celery -A config worker --loglevel=INFO --pool=solo --beat
+
+# ----- For running redis server -----
+redis-server
+
+# ----- For running web app -----
+python src/manage.py runserver

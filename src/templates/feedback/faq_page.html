@@ -1,0 +1,170 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create request' %}{% endblock title %}
+
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 mx-n1">
+        <a href="{% url 'student_list_requests' %}" class="text-hover-primary">{% trans "My Requests" %}</a>
+    </li>
+    <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+    <li class="breadcrumb-item text-gray-500 mx-n1">{% trans 'Create request' %}</li>
+{% endblock %}
+
+
+{% block main_content %}
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <!--begin::Hero card-->
+        <div class="card mb-12">
+            <!--begin::Hero body-->
+            <div class="card-body flex-column p-5">
+                <!--begin::Hero content-->
+                <div class="d-flex align-items-center h-lg-300px p-5 p-lg-20">
+                    <!--begin::Wrapper-->
+                    <div class="d-flex flex-column align-items-start justift-content-center flex-equal me-5">
+                        <!--begin::Title-->
+                        <h1 class="fw-bold fs-4 fs-lg-1 text-gray-800 mb-5 mb-lg-10">How Can We Help You?</h1>
+                        <!--end::Title-->
+                        <!--begin::Input group-->
+                        <div class="position-relative w-100">
+                            <i class="ki-outline ki-magnifier fs-2 text-primary position-absolute top-50 translate-middle ms-8"></i>
+                            <input
+                                    type="text"
+                                    class="form-control fs-4 py-4 ps-14 text-gray-700 placeholder-gray-500 mw-500px"
+                                    name="search"
+                                    value=""
+                                    placeholder="Ask a question"
+                            />
+                        </div>
+                        <!--end::Input group-->
+                    </div>
+                    <!--end::Wrapper-->
+                    <!--begin::Wrapper-->
+                    <div class="flex-equal d-flex justify-content-center align-items-end ms-5">
+                        <!--begin::Illustration-->
+                        <img
+                                src="{% static 'assets/media/illustrations/sketchy-1/20.png' %}"
+                                alt=""
+                                class="mw-100 mh-125px mh-lg-275px mb-lg-n12"
+                        />
+                        <!--end::Illustration-->
+                    </div>
+                    <!--end::Wrapper-->
+                </div>
+                <!--end::Hero content-->
+            </div>
+            <!--end::Hero body-->
+        </div>
+        <!--end::Hero card-->
+        <!--begin::FAQ card-->
+        <div class="card">
+            <!--begin::Body-->
+            <div class="card-body p-10 p-lg-15">
+                <!--begin::Classic content-->
+                <div class="mb-13">
+                    <!--begin::Intro-->
+                    <div class="mb-15">
+                        <!--begin::Title-->
+                        <h4 class="fs-2x text-gray-800 w-bolder mb-6">{% trans 'Frequesntly Asked Questions' %}</h4>
+                        <!--end::Title-->
+                        <!--begin::Text-->
+                        <p class="fw-semibold fs-4 text-gray-600 mb-2">
+                            {% trans 'First, a disclaimer – the entire process of writing a blog post often takes more than a couple of hours, even if you can type eighty words as per minute and your writing skills are sharp.' %}
+                        </p>
+                        <!--end::Text-->
+                    </div>
+                    <!--end::Intro-->
+                </div>
+                <!--end::Classic content-->
+                <div class="faq-container mb-15">
+                    <div class="row">
+
+                        {% for category in categories %}
+                            <div class="col-12 col-lg-6 mb-8">
+
+                                <h2 class="my-5 fw-bold">{{ category.title }}</h2>
+
+                                <div class="accordion accordion-toggle-arrow" id="accordion_cat_{{ category.id }}">
+
+                                    {% for item in category.published_items %}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="heading_{{ item.id }}">
+                                                <button class="accordion-button fs-4 fw-semibold collapsed"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse_{{ item.id }}">
+                                                    {{ item.question }}
+                                                </button>
+                                            </h2>
+
+                                            <div id="collapse_{{ item.id }}" class="accordion-collapse collapse"
+                                                 data-bs-parent="#accordion_cat_{{ category.id }}">
+                                                <div class="accordion-body text-gray-700 fs-6">
+                                                    {{ item.answer|safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="p-4 text-muted bg-light rounded">
+                                            {% trans "No questions in this category yet." %}
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="card card-custom bgi-no-repeat card-stretch gutter-b bg-light-warning border-0">
+                                    <div class="card-body">
+                                        <p class="text-warning fs-4 fw-bold mb-0">
+                                            {% trans "No FAQ categories available at the moment." %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <!--begin::Card-->
+                <div class="card mb-4 bg-light text-center">
+                    <!--begin::Body-->
+                    <div class="card-body py-12">
+                        <!--begin::Icon-->
+                        <a href="#" class="mx-4">
+                            <img src="{% static 'assets/media/svg/brand-logos/facebook-4.svg' %}" class="h-30px my-2"
+                                 alt=""/>
+                        </a>
+                        <!--end::Icon-->
+                        <!--begin::Icon-->
+                        <a href="#" class="mx-4">
+                            <img src="{% static 'assets/media/svg/brand-logos/instagram-2-1.svg' %}" class="h-30px my-2"
+                                 alt=""/>
+                        </a>
+                        <!--end::Icon-->
+                        <!--begin::Icon-->
+                        <a href="#" class="mx-4">
+                            <img src="{% static 'assets/media/svg/brand-logos/pinterest-p.svg' %}" class="h-30px my-2"
+                                 alt=""/>
+                        </a>
+                        <!--end::Icon-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Card-->
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::FAQ card-->
+    </div>
+    <!--end::Content-->
+{% endblock main_content %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

@@ -1,0 +1,238 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'List requests' %}{% endblock title %}
+
+{% block breadcrumbs %}
+    {% for crumb in breadcrumbs %}
+        <li class="breadcrumb-item"><i class="ki-outline ki-right fs-7 text-gray-700"></i></li>
+        <li class="breadcrumb-item text-gray-500 mx-n1">
+            {% if crumb.url %}
+                <a href="{{ crumb.url }}" class="text-gray-500 text-hover-primary">{{ crumb.name }}</a>
+            {% else %}
+                {{ crumb.name }}
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endblock %}
+
+{% block main_content %}
+
+    <!-- ========================================== -->
+    <!-- 1. ЗАГОЛОВОК ТА ФІЛЬТРИ (SELECT2)          -->
+    <!-- ========================================== -->
+    <div class="d-flex flex-wrap flex-stack mb-10">
+        <!-- Заголовок і загальна кількість (беремо з paginator.count) -->
+        <h3 class="fw-bold my-2">
+            {% trans 'List requests' %}
+            <span class="fs-6 text-gray-400 fw-semibold ms-1">({{ requests.paginator.count|default:"0" }})</span>
+        </h3>
+
+        <!-- Фільтри (Metronic Select2) -->
+        <div class="d-flex align-items-center my-2">
+            <span class="text-gray-500 fw-semibold me-3">{% trans 'Specialty:' %}</span>
+
+            <!-- Select2 ініціалізується автоматично через data-control="select2" -->
+            <!-- onchange одразу перенаправляє користувача за URL, який знаходиться в value -->
+            <select class="form-select form-select-solid form-select-sm w-200px fw-bold"
+                    data-control="select2"
+                    data-hide-search="true"
+                    onchange="window.location.href=this.value;">
+
+                <option value="?" {% if not current_specialty %}selected{% endif %}>
+                    {% trans 'All Requests' %}
+                </option>
+
+                <option value="?specialty=TENNIS" {% if current_specialty == 'TENNIS' %}selected{% endif %}>
+                    {% trans 'Tennis' %}
+                </option>
+
+                <option value="?specialty=NUTRITION" {% if current_specialty == 'NUTRITION' %}selected{% endif %}>
+                    {% trans 'Nutrition' %}
+                </option>
+
+                <option value="?specialty=PSYCHOLOGY" {% if current_specialty == 'PSYCHOLOGY' %}selected{% endif %}>
+                    {% trans 'Psychology' %}
+                </option>
+
+            </select>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. СІТКА КАРТОК (REQUESTS)                 -->
+    <!-- ========================================== -->
+    <div class="row g-6 g-xl-9">
+        {% for request_item in requests %}
+            <div class="col-md-6 col-xl-4">
+                <!--begin::Card-->
+                <a href="{% url 'student_request_detail' request_item.id %}" class="card border-hover-primary h-100">
+                    <!-- Card Header -->
+                    <div class="card-header border-0 pt-9">
+                        <div class="card-title m-0">
+                            {% if request_item.specialty_needed == 'NUTRITION' %}
+                                <!-- НУТРИЦІОЛОГ -->
+                                <div class="symbol symbol-50px w-50px bg-light-info">
+                                    <span class="symbol-label bg-transparent">
+                                        <i class="ki-outline ki-heart fs-2x text-info"></i>
+                                    </span>
+                                </div>
+                            {% elif request_item.specialty_needed == 'PSYCHOLOGY' %}
+                                <!-- ПСИХОЛОГ -->
+                                <div class="symbol symbol-50px w-50px bg-light-info">
+                                    <span class="symbol-label bg-transparent">
+                                        <i class="ki-outline ki-messages fs-2x text-info"></i>
+                                    </span>
+                                </div>
+                            {% else %}
+                                <!-- ТЕНІС -->
+                                <div class="symbol symbol-50px w-50px bg-light-info">
+                                    <span class="symbol-label bg-transparent">
+                                        <i class="ki-outline ki-user fs-2x text-info"></i>
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-toolbar">
+                            <span class="badge badge-light-{{ request_item.status_color_class }} fw-bold me-auto px-4 py-3">
+                                {{ request_item.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body p-9 d-flex flex-column">
+                        <div class="fs-3 fw-bold text-gray-900">{{ request_item.service.name }}</div>
+                        <p class="text-gray-500 fw-semibold fs-5 mt-1 mb-7 flex-grow-1">
+                            {% if request_item.comment %}
+                                {{ request_item.comment|truncatechars:100 }}
+                            {% else %}
+                                <span>{% trans 'No comment provided' %}</span>
+                            {% endif %}
+                        </p>
+
+                        <div class="d-flex flex-wrap mb-5">
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-7 mb-3">
+                                <div class="fs-6 text-gray-800 fw-bold">{{ request_item.created_at|date:"M j, Y - h:i A" }}</div>
+                                <div class="fw-semibold text-gray-500">{% trans 'Created Date' %}</div>
+                            </div>
+                        </div>
+
+                        <div class="h-4px w-100 bg-light mb-5" data-bs-toggle="tooltip"
+                             title="{{ request_item.progress_percentage }}% {% trans 'completed' %}">
+                            <div class="bg-{{ request_item.status_color_class }} rounded h-4px"
+                                 role="progressbar"
+                                 style="width: {{ request_item.progress_percentage }}%"
+                                 aria-valuenow="{{ request_item.progress_percentage }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"></div>
+                        </div>
+
+                        <!-- Specialist Info -->
+                        <div class="symbol-group symbol-hover mt-auto">
+                            {% if request_item.assigned_specialist %}
+                                <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip"
+                                     title="{{ request_item.assigned_specialist.get_full_name|default:request_item.assigned_specialist.email }}">
+                                    {% if request_item.assigned_specialist.avatar %}
+                                        <img alt="Pic" src="{{ request_item.assigned_specialist.avatar.url }}">
+                                    {% else %}
+                                        <img alt="Pic" src="{% static 'assets/media/svg/avatars/blank.svg' %}">
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="d-flex align-items-center" data-bs-toggle="tooltip"
+                                     title="{% trans 'Waiting for assignment' %}">
+                                    <div class="symbol symbol-35px symbol-circle me-3">
+                                        <span class="symbol-label bg-transparent border border-gray-400 border-dashed">
+                                            <i class="ki-outline ki-user fs-3 text-gray-500"></i>
+                                        </span>
+                                    </div>
+                                    <span class="badge badge-light-secondary text-gray-600 fw-bold">
+                                        {% trans 'Unassigned' %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                <!--end::Card-->
+            </div>
+        {% empty %}
+            <!-- EMPTY STATE -->
+            <div class="col-12 text-center p-10">
+                <div class="text-center px-4">
+                    <img class="mw-100 mh-300px" alt="Empty State"
+                         src="{% static 'assets/media/illustrations/sketchy-1/5.png' %}">
+                </div>
+                <div class="fs-2 text-muted fw-bold mb-5 mt-5">
+                    {% if current_specialty %}
+                        {% trans "You don't have any requests in this category." %}
+                    {% else %}
+                        {% trans "You don't have any requests yet." %}
+                    {% endif %}
+                </div>
+                <a href="{% url 'student_create_request' %}" class="btn btn-primary">
+                    {% trans "Create a new request" %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. ПАГІНАЦІЯ (Зі збереженням GET параметрів)-->
+    <!-- ========================================== -->
+    {% if requests.has_other_pages %}
+        <div class="d-flex flex-stack flex-wrap pt-10">
+            <!-- Індикатор -->
+            <div class="fs-6 fw-semibold text-gray-700">
+                {% trans "Showing" %} {{ requests.start_index }} {% trans "to" %} {{ requests.end_index }} {% trans "of" %} {{ requests.paginator.count }} {% trans "entries" %}
+            </div>
+
+            <!-- Сторінки -->
+            <ul class="pagination">
+
+                <!-- Кнопка 'Попередня' -->
+                <li class="page-item previous {% if not requests.has_previous %}disabled{% endif %}">
+                    <a href="{% if requests.has_previous %}?page=
+
+
+
+
+                        {{ requests.previous_page_number }}{% if current_specialty %}&specialty={{ current_specialty }}{% endif %}{% else %}#{% endif %}"
+                       class="page-link">
+                        <i class="previous"></i>
+                    </a>
+                </li>
+
+                <!-- Номери сторінок -->
+                {% for num in requests.paginator.page_range %}
+                    <li class="page-item {% if requests.number == num %}active{% endif %}">
+                        <a href="?page={{ num }}{% if current_specialty %}&specialty={{ current_specialty }}{% endif %}"
+                           class="page-link">{{ num }}</a>
+                    </li>
+                {% endfor %}
+
+                <!-- Кнопка 'Наступна' -->
+                <li class="page-item next {% if not requests.has_next %}disabled{% endif %}">
+                    <a href="{% if requests.has_next %}?page=
+
+
+
+
+                        {{ requests.next_page_number }}{% if current_specialty %}&specialty={{ current_specialty }}{% endif %}{% else %}#{% endif %}"
+                       class="page-link">
+                        <i class="next"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    {% endif %}
+
+{% endblock main_content %}
+
+{% block scripts %}
+    <!-- Будь-які додаткові скрипти, якщо потрібні, додавати сюди -->
+{% endblock scripts %}
