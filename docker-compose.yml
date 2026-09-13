@@ -15,7 +15,6 @@ services:
       ALLOWED_HOSTS: "${ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}"
       CSRF_TRUSTED_ORIGINS: "${CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}"
       RUN_MIGRATIONS: "true"
-      RUN_COLLECTSTATIC: "true"
     ports:
       - "${WEB_PORT:-8000}:8000"
     depends_on:
@@ -23,14 +22,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - staticfiles:/app/src/staticfiles
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=5)\""]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 30s
+      start_period: 15s
 
   worker:
     build:
@@ -46,7 +43,6 @@ services:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL:-redis://redis:6379/0}"
       CELERY_RESULT_BACKEND: "${CELERY_RESULT_BACKEND:-redis://redis:6379/0}"
       RUN_MIGRATIONS: "false"
-      RUN_COLLECTSTATIC: "false"
     command: ["celery", "-A", "config", "worker", "--loglevel=info"]
     depends_on:
       db:
@@ -68,13 +64,14 @@ services:
       CELERY_BROKER_URL: "${CELERY_BROKER_URL:-redis://redis:6379/0}"
       CELERY_RESULT_BACKEND: "${CELERY_RESULT_BACKEND:-redis://redis:6379/0}"
       RUN_MIGRATIONS: "false"
-      RUN_COLLECTSTATIC: "false"
-    command: ["celery", "-A", "config", "beat", "--loglevel=info", "--schedule=/tmp/celerybeat-schedule"]
+    command: ["celery", "-A", "config", "beat", "--loglevel=info", "--schedule=/var/run/celery/celerybeat-schedule"]
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+    volumes:
+      - celery_beat_data:/var/run/celery
 
   db:
     image: postgres:17-alpine
@@ -108,4 +105,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
-  staticfiles:
+  celery_beat_data:

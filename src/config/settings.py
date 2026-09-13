@@ -317,6 +317,6 @@ UPLOAD_DIRECTORIES = {
     'psychology_request': 'requests/psychology',
     'avatars': 'avatars',
 }
-
+WHITENOISE_MANIFEST_STRICT = False
 # For production
 # CSRF_COOKIE_SECURE=True

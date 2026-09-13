@@ -13,7 +13,7 @@ ENV/
 db.sqlite3
 *.sqlite3
 staticfiles/
-media/
+#media/
 celerybeat-schedule
 celerybeat-schedule-*
 dump.rdb
