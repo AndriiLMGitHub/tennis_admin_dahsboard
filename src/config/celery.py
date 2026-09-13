@@ -17,6 +17,6 @@ app.conf.imports = [
 app.conf.beat_schedule = {
     'cleanup-orphaned-r2-files-every-night': {
         'task': 'infrastructure.r2_storage.tasks.clear_orphaned_r2_uploads',
-        'schedule': crontab(hour=14, minute=59),
+        'schedule': crontab(hour=3, minute=0),
     },
 }

@@ -2,6 +2,7 @@ from pathlib import Path
 import dj_database_url
 import os
 
+from celery.schedules import crontab
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     'adminsortable2',
     'storages',
@@ -193,7 +195,8 @@ CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_ENABLE_UTC = False
+CELERY_ENABLE_UTC = True
+
 
 # Email host configurations
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -243,6 +246,11 @@ ACCOUNT_FORMS = {
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_OAUTH_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_OAUTH_SECRET', ''),
+            'key': ''
+        },
         "SCOPE": ["email", "profile", ],
         "AUTH_PARAMS": {"access_type": "online"},
         "OAUTH_PKCE_ENABLED": True,

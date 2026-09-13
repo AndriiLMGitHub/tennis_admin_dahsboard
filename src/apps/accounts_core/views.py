@@ -1,14 +1,13 @@
-from aiogram.utils.i18n import context
 from allauth.account.forms import ChangePasswordForm
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, get_backends, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.db import transaction
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
+from requests import Request
 
 from apps.accounts_core.constants import LANGUAGES_DATA, TIMEZONES_DATA, COUNTRIES_DATA, CURRENCIES_DATA
 from apps.accounts_core.forms import RoleForm, CustomSignupForm, StudentProfileUpdateForm, CoachProfileUpdateForm
@@ -23,7 +22,7 @@ from django.utils.translation import gettext_lazy as _
 # ==========================================
 
 @login_required
-def select_role(request):
+def select_role(request: Request):
     user = request.user
 
     if user.is_superuser or user.is_staff:

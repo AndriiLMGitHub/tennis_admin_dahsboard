@@ -44,6 +44,11 @@ RUN pip install --upgrade pip \
     && pip install --no-index --find-links=/wheels -r /app/requirements.txt \
     && rm -rf /wheels
 
+RUN addgroup --system django \
+    && adduser --system --ingroup django django \
+    && mkdir -p /var/run/celery \
+    && chown -R django:django /var/run/celery
+
 # Створюємо непривілейованого користувача
 RUN addgroup --system django \
     && adduser --system --ingroup django django
@@ -53,12 +58,6 @@ RUN chmod +x /entrypoint.sh
 
 # Копіюємо код і передаємо права
 COPY --chown=django:django . /app/
-
-# Створюємо директорію та порожні файли, які вимагає Leaflet CSS, щоб Whitenoise не падав
-RUN mkdir -p /app/src/assets/plugins/custom/leaflet/images/leaflet/ \
-    && touch /app/src/assets/plugins/custom/leaflet/images/leaflet/layers.png \
-    && touch /app/src/assets/plugins/custom/leaflet/images/leaflet/layers-2x.png \
-    && touch /app/src/assets/plugins/custom/leaflet/images/leaflet/marker-icon.png
 
 # ЗБІРКА СТАТИКИ ПІД ЧАС BUILD
 # Dummy-змінні потрібні, щоб обійти валідацію settings.py без доступу до реальної БД
@@ -72,4 +71,4 @@ USER django
 EXPOSE 8000
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]

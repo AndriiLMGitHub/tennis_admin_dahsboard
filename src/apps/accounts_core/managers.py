@@ -35,9 +35,9 @@ class UserManager(BaseUserManager):
         # 🚨 ОСОБЛИВО КРИТИЧНО ДЛЯ ТВОЄЇ АРХІТЕКТУРИ:
         # Примусово виставляємо роль "Admin" (або ту, яка у тебе є в ROLE_CHOICES для адмінів)
         # Це перекриває будь-які вимоги консолі щодо введення ролі.
-        extra_fields["role"] = "Admin"
+        extra_fields["role"] = None
 
         # Для superuser статус Coach апріорі відсутній
-        extra_fields["coach_status"] = None
+        extra_fields["user_status"] = None
 
         return self._create_user(email, password, **extra_fields)
